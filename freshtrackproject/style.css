@@ -1,0 +1,6 @@
+/* Importa Tailwind CSS */
+@import './node_modules/tailwindcss/base';
+@import './node_modules/tailwindcss/components';
+@import './node_modules/tailwindcss/utilities';
+
+/* Aggiungi qui eventuali personalizzazioni o estensioni */
