@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodie Manager</title>
+    <!-- Integra Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Integra Font Awesome per icone -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-gray-800">Foodie Manager</h1>
+                <div>
+                    <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-800">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gray-200 py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-lg mx-auto text-center">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Foodie Manager</h2>
+                <p class="text-lg text-gray-700 mb-8">Your one-stop solution for managing your home food inventory.</p>
+                <a href="#login" class="bg-red-400 text-white py-2 px-6 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Login to Your Account</h2>
+                <form>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="email" name="email" class="mt-1 p-2 w-full border rounded-lg">
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-lg">
+                    </div>
+                    <button type="submit" class="w-full bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Login</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <p class="text-center">&copy; 2024 Foodie Manager. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

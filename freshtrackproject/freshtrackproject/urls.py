@@ -16,8 +16,8 @@ Including another URLconf
 """
 
 from django.urls import path
-from freshtrack.views import hello
+from freshtrack.views import index
 
 urlpatterns = [
-    path('', hello, name='hello'),
+    path('', index, name='index'),
 ]
