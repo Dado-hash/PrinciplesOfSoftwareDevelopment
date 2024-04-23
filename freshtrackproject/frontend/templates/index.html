@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodie Manager</title>
+    <title>FreshTrack</title>
     <!-- Integra Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
     <!-- Integra Font Awesome per icone -->
@@ -11,13 +11,14 @@
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100"> <!-- Applica flex-col al body per un layout a colonna -->
     <!-- Navbar -->
-    <nav class="bg-white shadow-lg">
+    <nav class="bg-white shadow-lg h-20">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <h1 class="text-xl font-bold text-gray-800">Foodie Manager</h1>
-                <div>
+                <div class="flex items-center"> <!-- Modifica il container per contenere entrambi i link -->
                     <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
-                    <a href="#" class="text-gray-600 hover:text-gray-800">About</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                    <a href="login" class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Login</a> <!-- Aggiungi il link per il login -->
                 </div>
             </div>
         </div>
@@ -29,7 +30,7 @@
             <div class="max-w-lg text-center">
                 <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Foodie Manager</h2>
                 <p class="text-lg text-gray-700 mb-8">Your one-stop solution for managing your home food inventory.</p>
-                <a href="login" class="bg-red-400 text-white py-2 px-6 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Get Started</a>
+                <a href="register" class="bg-red-400 text-white py-2 px-6 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Get Started</a>
             </div>
         </div>
     </section>
