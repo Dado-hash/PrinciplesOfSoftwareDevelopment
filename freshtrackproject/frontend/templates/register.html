@@ -45,9 +45,6 @@
                     <div class="mb-4">
                         <label for="password1" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password1" name="password2" class="mt-1 p-2 w-full border rounded-lg">
-                        {% for error in form.email.errors %}
-                            <p class="text-red-500 text-sm">{{ error }}</p>
-                        {% endfor %}
                     </div>
                     <div class="mb-6">
                         <label for="password2" class="block text-sm font-medium text-gray-700">Confirm Password</label>
