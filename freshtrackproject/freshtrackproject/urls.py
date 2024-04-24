@@ -15,12 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from freshtrack.views import index, login, register
+from django.urls import path, include
+from freshtrack.views import index, login, register, home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
-    path('login', login, name='login'),
-    path('register', register, name='register')
+    path('', include("django.contrib.auth.urls")),
+    path('register/', register, name='register'),
+    path('home/', home, name='home')
 ]
