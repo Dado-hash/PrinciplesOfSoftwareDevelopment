@@ -33,41 +33,41 @@
                     {% csrf_token %}
                     <div class="mb-4">
                         <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" id="firstname" name="firstname" class="mt-1 p-2 w-full border rounded-lg">
+                        <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-lg">
                     </div>
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input type="text" id="email" name="email" class="mt-1 p-2 w-full border rounded-lg">
+                        <input type="email" id="email" name="email" class="mt-1 p-2 w-full border rounded-lg">
                         {% for error in form.email.errors %}
                             <p class="text-red-500 text-sm">{{ error }}</p>
                         {% endfor %}
                     </div>
                     <div class="mb-4">
                         <label for="password1" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" id="password1" name="password2" class="mt-1 p-2 w-full border rounded-lg">
+                        <input type="password" id="password1" name="password1" class="mt-1 p-2 w-full border rounded-lg">
                     </div>
                     <div class="mb-6">
                         <label for="password2" class="block text-sm font-medium text-gray-700">Confirm Password</label>
                         <input type="password" id="password2" name="password2" class="mt-1 p-2 w-full border rounded-lg">
-                    <span id="password-strength" class="text-sm"></span>
+                        <span id="password-strength" class="text-sm"></span>
                     </div>
 
                     <script>
-                    document.getElementById('password1').addEventListener('input', function() {
-                        var password = this.value;
-                        var strengthText = document.getElementById('password-strength');
+                        document.getElementById('password1').addEventListener('input', function() {
+                            var password = this.value;
+                            var strengthText = document.getElementById('password-strength');
 
-                        // Verifica la lunghezza della password e visualizza un messaggio di feedback
-                        if (password.length >= 8) {
-                            strengthText.textContent = 'Password sicura';
-                            strengthText.classList.remove('text-red-500');
-                            strengthText.classList.add('text-green-500');
-                        } else {
-                            strengthText.textContent = 'At least 8 characters';
-                            strengthText.classList.remove('text-green-500');
-                            strengthText.classList.add('text-red-500');
-                        }
-                    });
+                            // Verifica la lunghezza della password e visualizza un messaggio di feedback
+                            if (password.length >= 8) {
+                                strengthText.textContent = 'Password sicura';
+                                strengthText.classList.remove('text-red-500');
+                                strengthText.classList.add('text-green-500');
+                            } else {
+                                strengthText.textContent = 'At least 8 characters';
+                                strengthText.classList.remove('text-green-500');
+                                strengthText.classList.add('text-red-500');
+                            }
+                        });
                     </script>
 
                     <button type="submit" class="w-full bg-green-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-500 transition duration-300">Register</button>

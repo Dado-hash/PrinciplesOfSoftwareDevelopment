@@ -33,8 +33,13 @@ def login_user(request):
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
+        print(form.is_valid())
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            print(user)
+            user.is_staff = False
+            user.is_superuser = False
+            user.save()
             return redirect("/login")
     else:
         form = RegisterForm()
