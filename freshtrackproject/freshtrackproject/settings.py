@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+from celery import Celery
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,3 +130,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'frontend', 'static')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Impostazione di Celery
+celery_app = Celery('freshtrack')
+
+# Configurazione del broker di messaggi (es. Redis, RabbitMQ)
+celery_app.config_from_object('django.conf:settings', namespace='CELERY')
+
+# Caricamento delle attività dai moduli Django
+celery_app.autodiscover_tasks()
+
+# Configurazione del broker di messaggi per Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Esempio per Redis
+
+# Opzionale: Configurazione del risultato del backend per Celery
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Esempio per Redis
