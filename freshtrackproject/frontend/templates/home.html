@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshTrack</title>
+    <!-- Integra Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Integra Font Awesome per icone -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100"> <!-- Applica flex-col al body per un layout a colonna -->
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg h-20">
+        <div class="container mx-auto px-4 flex justify-between items-center h-full"> <!-- Aggiungi la classe h-full per impostare l'altezza della navbar -->
+            <h1 class="text-xl font-bold text-gray-800">Foodie Manager</h1>
+            <div class="flex items-center">
+                <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                <div class="relative">
+                    <button class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300" onclick="toggleMenu()">
+                        <i class="fas fa-bars"></i> <!-- Aggiungi icona per il menu a tendina -->
+                    </button>
+                    <div id="dropdown-menu" class="absolute right-0 mt-2 bg-white border rounded-lg shadow-md hidden">
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
+                        <form action="{% url 'logout' %}" method="post" class="block px-4 py-2">
+                            {% csrf_token %}
+                            <button type="submit" class="text-gray-800 hover:bg-gray-200">Logout</button>
+                        </form> <!-- Utilizza un form per il logout -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="flex-1"> <!-- Utilizza flex-1 per far sì che il contenuto occupi lo spazio rimanente -->
+        <!-- Inserisci qui il contenuto della tua pagina -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 fixed bottom-0 w-full"> <!-- Aggiungi 'fixed bottom-0 w-full' per posizionare il footer in basso -->
+        <div class="container mx-auto px-4">
+            <p class="text-center">&copy; 2024 Foodie Manager. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

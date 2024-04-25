@@ -1,6 +1,7 @@
 import time
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -47,5 +48,11 @@ def register(request):
     return render(request, "register.html", {"form": form})
 
 
+@login_required
 def home(request):
     return render(request, 'home.html')
+
+
+def logout(request):
+    logout(request)
+    return redirect('login')

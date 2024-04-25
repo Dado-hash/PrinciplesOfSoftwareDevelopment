@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from freshtrack.views import index, login, register, home
+from freshtrack.views import index, logout, register, home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('', include("django.contrib.auth.urls")),
     path('register/', register, name='register'),
-    path('home/', home, name='home')
+    path('home/', home, name='home'),
+    path('logout/', logout, name='logout')
 ]
