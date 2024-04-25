@@ -51,19 +51,18 @@ def register(request):
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    # Qui inserisci il codice per renderizzare la home
+    pantry_items = Product.objects.filter(user=request.user)
+    shopping_items = ShoppingList.objects.filter(user=request.user)
+    return render(request, 'home.html', {'pantry_items': pantry_items, 'shopping_items': shopping_items})
 
-
+@login_required
 def logout(request):
     logout(request)
     return redirect('login')
 
 
-def shopping_list(request):
-    shopping_items = ShoppingList.objects.filter(user=request.user)
-    return render(request, 'shopping_list.html', {'shopping_items': shopping_items})
-
-
+@login_required
 def add_to_shopping_list(request):
     if request.method == 'POST':
         form = ShoppingListForm(request.POST)
@@ -71,12 +70,12 @@ def add_to_shopping_list(request):
             shopping_item = form.save(commit=False)
             shopping_item.user = request.user
             shopping_item.save()
-            return redirect('shopping_list')
+            return redirect('home')
     else:
         form = ShoppingListForm()
-    return render(request, 'add_to_shopping_list.html', {'form': form})
+    return render(request, 'home.html', {'form': form})
 
-
+@login_required
 def update_shopping_list(request, product_id):
     product = Product.objects.get(pk=product_id)
     if product.user == request.user and product.quantity == 0 and not product.always_in_stock:
@@ -84,14 +83,14 @@ def update_shopping_list(request, product_id):
         shopping_item.save()
     return redirect('home')
 
-
+@login_required
 def remove_from_shopping_list(request, item_id):
     shopping_item = ShoppingList.objects.get(pk=item_id)
     if shopping_item.user == request.user:
         shopping_item.delete()
     return redirect('shopping_list')
 
-
+@login_required
 def mark_as_purchased(request, item_id):
     shopping_item = ShoppingList.objects.get(pk=item_id)
     if shopping_item.user == request.user:
@@ -99,7 +98,7 @@ def mark_as_purchased(request, item_id):
         shopping_item.save()
     return redirect('shopping_list')
 
-
+@login_required
 def product_detail(request, product_id):
     product = Product.objects.get(pk=product_id)
     if request.method == 'POST':
@@ -110,4 +109,26 @@ def product_detail(request, product_id):
     return render(request, 'product_detail.html', {'product': product})
 
 
+@login_required
+def add_to_pantry(request):
+    if request.method == 'POST':
+        # Ricevi i dati dal form
+        product_name = request.POST.get('product_name')
+        expiration_date = request.POST.get('expiration_date')
+        quantity = request.POST.get('quantity')
+        unit_of_measure = request.POST.get('unit_of_measure')
+
+        # Crea un nuovo oggetto Product nella dispensa dell'utente corrente
+        Product.objects.create(
+            user=request.user,
+            name=product_name,
+            expiration_date=expiration_date,
+            quantity=quantity,
+            unit_of_measure=unit_of_measure
+        )
+
+        # Reindirizza l'utente alla home o alla pagina della dispensa
+        return redirect('home')  # Puoi cambiare 'home' con la URL della pagina della dispensa se necessario
+
+    return render(request, 'home.html')  # Renderizza il template del form per aggiungere alla dispensa
 

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from freshtrack.views import index, logout, register, home
+from freshtrack.views import index, logout, register, home, add_to_pantry, add_to_shopping_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,7 @@ urlpatterns = [
     path('', include("django.contrib.auth.urls")),
     path('register/', register, name='register'),
     path('home/', home, name='home'),
-    path('logout/', logout, name='logout')
+    path('logout/', logout, name='logout'),
+    path('add_to_pantry', add_to_pantry, name='add_to_pantry'),
+    path('add_to_shopping_list', add_to_shopping_list, name='add_to_shopping_list')
 ]

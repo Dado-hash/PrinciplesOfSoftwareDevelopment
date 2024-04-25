@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from freshtrack.models import ShoppingList
+from freshtrack.models import ShoppingList, Product
 
 
 class RegisterForm(UserCreationForm):
@@ -29,4 +29,10 @@ class RegisterForm(UserCreationForm):
 class ShoppingListForm(forms.ModelForm):
     class Meta:
         model = ShoppingList
-        fields = ['product_name', 'quantity']
+        fields = ['product_name', 'quantity', 'unit_of_measure']
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'quantity', 'unit_of_measure', 'expiration_date']  # Aggiungi 'quantity' e 'expiration_date' ai campi del form

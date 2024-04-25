@@ -12,34 +12,90 @@
 <body class="flex flex-col min-h-screen bg-gray-100"> <!-- Applica flex-col al body per un layout a colonna -->
     <!-- Navbar -->
     <nav class="bg-white shadow-lg h-20">
-        <div class="container mx-auto px-4 flex justify-between items-center h-full"> <!-- Aggiungi la classe h-full per impostare l'altezza della navbar -->
-            <h1 class="text-xl font-bold text-gray-800">Foodie Manager</h1>
-            <div class="flex items-center">
-                <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
-                <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
-                <div class="relative">
-                    <button class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300" onclick="toggleMenu()">
-                        <i class="fas fa-bars"></i> <!-- Aggiungi icona per il menu a tendina -->
-                    </button>
-                    <div id="dropdown-menu" class="absolute right-0 mt-2 bg-white border rounded-lg shadow-md hidden">
-                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
-                        <form action="{% url 'logout' %}" method="post" class="block px-4 py-2">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-gray-800">Foodie Manager</h1>
+                <div class="flex items-center"> <!-- Modifica il container per contenere entrambi i link -->
+                    <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                    <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
                             {% csrf_token %}
-                            <button type="submit" class="text-gray-800 hover:bg-gray-200">Logout</button>
+                            <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
                         </form> <!-- Utilizza un form per il logout -->
-                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Content -->
-    <div class="flex-1"> <!-- Utilizza flex-1 per far sì che il contenuto occupi lo spazio rimanente -->
-        <!-- Inserisci qui il contenuto della tua pagina -->
+    <div class="flex-1 px-4 py-8 mx-auto">
+
+        <!-- Aggiunta di prodotti alla dispensa -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4">Aggiungi prodotto alla dispensa</h2>
+            <form action="{% url 'add_to_pantry' %}" method="post">
+                {% csrf_token %}
+                <div class="flex mb-4">
+                    <input type="text" name="product_name" placeholder="product_name" class="mr-2 p-2 border rounded-lg">
+                    <input type="number" name="quantity" placeholder="quantity" class="mr-2 p-2 border rounded-lg"> <!-- Aggiungi il campo per la quantità -->
+                    <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg"> <!-- Menu a tendina per l'unità di misura -->
+                        <option value="l">Litri</option>
+                        <option value="g">Grammi</option>
+                        <option value="u">Unità</option>
+                    </select>
+                    <input type="date" name="expiration_date" class="mr-2 p-2 border rounded-lg">
+                    <input type="submit" value="Add" class="bg-blue-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-500 transition duration-300">
+                </div>
+            </form>
+        </div>
+
+        <!-- Aggiunta di prodotti alla lista della spesa -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4">Aggiungi prodotto alla lista della spesa</h2>
+            <form action="{% url 'add_to_shopping_list' %}" method="post">
+                {% csrf_token %}
+                <div class="flex mb-4">
+                    <input type="text" name="product_name" placeholder="product_name" class="mr-2 p-2 border rounded-lg">
+                    <input type="number" name="quantity" placeholder="quantity" class="mr-2 p-2 border rounded-lg"> <!-- Aggiungi il campo per la quantità -->
+                    <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg"> <!-- Menu a tendina per l'unità di misura -->
+                        <option value="l">Litri</option>
+                        <option value="g">Grammi</option>
+                        <option value="u">Unità</option>
+                    </select>
+                    <input type="submit" value="Add" class="bg-green-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-500 transition duration-300">
+                </div>
+            </form>
+        </div>
+
+        <!-- Visualizzazione della dispensa -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4">Dispensa</h2>
+            <ul>
+                {% for item in pantry_items %}
+                    <li>{{ item.name }} - Quantity: {{ item.quantity }}{{ item.unit_of_measure }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Visualizzazione della lista della spesa -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4">Lista della spesa</h2>
+            <ul>
+                {% for item in shopping_items %}
+                    <li>{{ item.product_name }} - Quantity: {{ item.quantity }}{{ item.unit_of_measure }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Altre informazioni utili -->
+        <div>
+            <!-- Aggiungi altri elementi come informazioni sulla dispensa, statistiche, ecc. -->
+        </div>
+
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 fixed bottom-0 w-full"> <!-- Aggiungi 'fixed bottom-0 w-full' per posizionare il footer in basso -->
+    <footer class="bg-gray-800 text-white py-8 fixed bottom-0 w-full">
         <div class="container mx-auto px-4">
             <p class="text-center">&copy; 2024 Foodie Manager. All rights reserved.</p>
         </div>
