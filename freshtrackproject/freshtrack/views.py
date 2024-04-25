@@ -6,7 +6,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .forms import RegisterForm
+from .forms import RegisterForm, ShoppingListForm
+from .models import Product, ShoppingList
 
 
 def index(request):
@@ -56,3 +57,57 @@ def home(request):
 def logout(request):
     logout(request)
     return redirect('login')
+
+
+def shopping_list(request):
+    shopping_items = ShoppingList.objects.filter(user=request.user)
+    return render(request, 'shopping_list.html', {'shopping_items': shopping_items})
+
+
+def add_to_shopping_list(request):
+    if request.method == 'POST':
+        form = ShoppingListForm(request.POST)
+        if form.is_valid():
+            shopping_item = form.save(commit=False)
+            shopping_item.user = request.user
+            shopping_item.save()
+            return redirect('shopping_list')
+    else:
+        form = ShoppingListForm()
+    return render(request, 'add_to_shopping_list.html', {'form': form})
+
+
+def update_shopping_list(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if product.user == request.user and product.quantity == 0 and not product.always_in_stock:
+        shopping_item = ShoppingList(user=request.user, product_name=product.name, quantity=1)
+        shopping_item.save()
+    return redirect('home')
+
+
+def remove_from_shopping_list(request, item_id):
+    shopping_item = ShoppingList.objects.get(pk=item_id)
+    if shopping_item.user == request.user:
+        shopping_item.delete()
+    return redirect('shopping_list')
+
+
+def mark_as_purchased(request, item_id):
+    shopping_item = ShoppingList.objects.get(pk=item_id)
+    if shopping_item.user == request.user:
+        shopping_item.purchased = True
+        shopping_item.save()
+    return redirect('shopping_list')
+
+
+def product_detail(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if request.method == 'POST':
+        if 'always_in_stock' in request.POST:
+            product.always_in_stock = True
+            product.save()
+            return redirect('product_detail', product_id=product_id)
+    return render(request, 'product_detail.html', {'product': product})
+
+
+
