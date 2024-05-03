@@ -3,10 +3,10 @@ import time
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 
-from .forms import RegisterForm, ShoppingListForm
+from .forms import EditProductForm, RegisterForm, ShoppingListForm
 from .models import Product, ShoppingList
 
 
@@ -162,7 +162,7 @@ def mark_as_not_purchased(request, item_id):
         pass
     return redirect('home')
 
-
+@login_required
 def move_to_shopping_list(request, item_id):
     # Trova l'oggetto della dispensa da spostare
     pantry_item = Product.objects.get(id=item_id)
@@ -177,3 +177,54 @@ def move_to_shopping_list(request, item_id):
     )
     pantry_item.delete()
     return redirect('home')
+
+@login_required
+def pantry_product_detail(request, item_id):
+    item = get_object_or_404(Product, pk=item_id)
+    return render(request, 'product_detail.html', {'item': item})
+
+@login_required
+def shopping_list_item_detail(request, item_id):
+    item = get_object_or_404(ShoppingList, pk=item_id)
+    return render(request, 'shopping_list_item_detail.html', {'item': item})
+
+@login_required
+def edit_shopping_list_item(request, item_id):
+    # Recupera l'istanza dell'elemento della lista della spesa
+    item = get_object_or_404(ShoppingList, id=item_id)
+    
+    if request.method == 'POST':
+        # Se il metodo della richiesta è POST, significa che l'utente ha inviato il modulo con i dati aggiornati
+        form = ShoppingListForm(request.POST, instance=item)
+        if form.is_valid():
+            # Salva i dati aggiornati dell'elemento della lista della spesa nel database
+            form.save()
+            # Reindirizza l'utente alla pagina di dettaglio dell'elemento della lista della spesa appena modificato
+            return redirect('shopping_list_item_detail', item_id=item.id)
+    else:
+        # Se il metodo della richiesta non è POST, significa che è una richiesta GET e l'utente sta solo visualizzando il modulo
+        form = ShoppingListForm(instance=item)
+    
+    # Passa il modulo compilato o vuoto al template
+    return render(request, 'shopping_list_item_detail.html', {'form': form})
+
+@login_required
+def update_product(request, item_id):
+    # Recupera l'istanza del prodotto
+    item = get_object_or_404(Product, id=item_id)
+    
+    if request.method == 'POST':
+        # Se il metodo della richiesta è POST, significa che l'utente ha inviato il modulo con i dati aggiornati
+        form = EditProductForm(request.POST, instance=item)
+        if form.is_valid():
+            # Salva i dati aggiornati del prodotto nel database
+            form.save()
+            # Reindirizza l'utente alla pagina di dettaglio del prodotto appena modificato
+            return redirect('pantry_product_detail', item_id=item.id)
+    else:
+        # Se il metodo della richiesta non è POST, significa che è una richiesta GET e l'utente sta solo visualizzando il modulo
+        form = EditProductForm(instance=item)
+    
+    # Il form è invalido, passa il form compilato e gli errori al template
+    return render(request, 'product_detail.html', {'form': form, 'item': item, 'errors': form.errors})
+

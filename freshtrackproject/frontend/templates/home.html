@@ -91,7 +91,7 @@
                     {% for item in pantry_items %}
                         <li class="flex items-center justify-between">
                             <div>
-                                {{ item.name }} - {{ item.quantity }}{{ item.unit_of_measure }}
+                                <a href="{% url 'pantry_product_detail' item.id %}" class="text-blue-500 hover:underline">{{ item.name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
                             </div>
                             <div class="flex space-x-2">
                                 <!-- Form per rimuovere il prodotto dalla dispensa -->
@@ -112,7 +112,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </div>                
+            </div>               
 
             <!-- Visualizzazione della lista della spesa -->
             <div class="mb-8">
@@ -124,17 +124,18 @@
                         Remove bought products and add to pantry
                     </button>
                 </form>
+
                 <ul class="space-y-4">
                     {% for item in shopping_items %}
                         <li class="flex items-center justify-between">
                             <div>
                                 {% if item.purchased %}
-                                    <del>{{ item.product_name }} - {{ item.quantity }}{{ item.unit_of_measure }}</del>
+                                    <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="text-blue-500 hover:underline">{{ item.product_name }}</a></del> - {{ item.quantity }}{{ item.unit_of_measure }}
                                 {% else %}
-                                    {{ item.product_name }} - {{ item.quantity }}{{ item.unit_of_measure }}
+                                    <a href="{% url 'shopping_list_item_detail' item.id %}" class="text-blue-500 hover:underline">{{ item.product_name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
                                 {% endif %}
                             </div>
-                            <div class="flex space-x-2"> <!-- Contenitore flessibile per i pulsanti con spazio tra di essi -->
+                            <div class="flex space-x-2">
                                 <!-- Form per rimuovere il prodotto dalla lista della spesa -->
                                 <form action="{% url 'remove_from_shopping_list' item.id %}" method="post">
                                     {% csrf_token %}
@@ -174,7 +175,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 fixed bottom-0 w-full">
+    <footer class="bg-gray-800 text-white py-4 fixed bottom-0 w-full">
         <div class="container mx-auto px-4">
             <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
         </div>

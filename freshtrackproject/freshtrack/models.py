@@ -39,3 +39,4 @@ class ShoppingList(models.Model):
     added_date = models.DateTimeField(auto_now_add=True)
     purchased = models.BooleanField(default=False)
     always_in_stock = models.BooleanField(default=False)
+    notes = models.TextField(blank=True, null=True)

@@ -36,4 +36,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'quantity', 'unit_of_measure', 'expiration_date', 'always_in_stock']  # Aggiungi 'quantity' e 'expiration_date' ai campi del form
-        
+
+
+class EditProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'expiration_date', 'category', 'storage_location', 'status', 'quantity', 'unit_of_measure', 'always_in_stock', 'notes']
+

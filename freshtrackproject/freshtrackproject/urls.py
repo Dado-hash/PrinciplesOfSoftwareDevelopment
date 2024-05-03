@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from freshtrack.views import index, logout, mark_as_not_purchased, mark_as_purchased, register, home, add_to_pantry, add_to_shopping_list, remove_and_add_to_pantry, remove_from_pantry, remove_from_shopping_list, move_to_shopping_list
+from freshtrack.views import index, logout, mark_as_not_purchased, mark_as_purchased, register, home, add_to_pantry, add_to_shopping_list, remove_and_add_to_pantry, remove_from_pantry, remove_from_shopping_list, move_to_shopping_list, pantry_product_detail, shopping_list_item_detail, edit_shopping_list_item, update_product
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +33,8 @@ urlpatterns = [
     path('remove_from_shopping_list/<int:item_id>/', remove_from_shopping_list, name='remove_from_shopping_list'),
     path('add_to_shopping_list', add_to_shopping_list, name='add_to_shopping_list'),
     path('move_to_shopping_list/<int:item_id>/', move_to_shopping_list, name='move_to_shopping_list'),
+    path('pantry_product_detail/<int:item_id>/', pantry_product_detail, name='pantry_product_detail'),
+    path('shopping_list_item_detail/<int:item_id>/', shopping_list_item_detail, name='shopping_list_item_detail'),
+    path('edit_shopping_list_item/<int:item_id>/', edit_shopping_list_item, name='edit_shopping_list_item'),
+    path('update_product/<int:item_id>/', update_product, name='update_product')
 ]

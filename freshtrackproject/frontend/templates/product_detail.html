@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <!-- Integra Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg h-20">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
+                <div class="flex items-center">
+                    <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                    <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
+                        {% csrf_token %}
+                        <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8 mt-8">
+        <h1 class="text-2xl font-bold mb-4">Modifica Prodotto</h1>
+        <form action="{% url 'update_product' item.id %}" method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <input type="text" name="name" value="{{ item.name }}" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
+            </div>
+            <div class="mb-4">
+                <label for="expiration_date" class="block text-sm font-medium text-gray-700">Expiration Date</label>
+                <input type="date" name="expiration_date" id="expiration_date" value="{{ item.expiration_date|date:'Y-m-d' }}" class="mt-1 p-2 border rounded-lg">
+            </div>
+            <div class="mb-4">
+                <input type="text" name="category" value="{{ item.category }}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
+            </div>
+            <div class="mb-4">
+                <input type="text" name="storage_location" value="{{ item.storage_location }}" placeholder="Storage location" class="mr-2 p-2 border rounded-lg">
+            </div>
+            <div class="mb-4">
+                <input type="text" name="status" value="{{ item.status }}" placeholder="Status" class="mr-2 p-2 border rounded-lg">
+            </div>
+            <div class="mb-4">
+                <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg">
+                <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
+                    <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litri</option>
+                    <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grammi</option>
+                    <option value="u" {% if item.unit_of_measure == 'u' %}selected{% endif %}>Unità</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="hidden" name="always_in_stock" value="False">
+                    <input type="checkbox" name="always_in_stock" value="True" class="form-checkbox h-5 w-5 text-blue-600" {% if item.always_in_stock %}checked{% endif %}>
+                    <span class="ml-2 mr-2 text-gray-700">Always in stock</span>
+                </label>
+            </div>
+            <div class="mb-4">
+                <textarea name="notes" placeholder="Notes" class="p-2 border rounded-lg w-full">{{ item.notes }}</textarea>
+            </div>
+            <input type="submit" value="Save edits" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
+        </form>
+    </div>
+    
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4 fixed bottom-0 w-full">
+        <div class="container mx-auto">
+            <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
