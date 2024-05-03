@@ -74,7 +74,13 @@
                 <h2 class="text-xl font-bold mb-4">Dispensa</h2>
                 <ul>
                     {% for item in pantry_items %}
-                        <li>{{ item.name }} - Quantity: {{ item.quantity }}{{ item.unit_of_measure }}</li>
+                        <li>
+                            {{ item.name }} - Quantity: {{ item.quantity }}{{ item.unit_of_measure }}
+                            <form action="{% url 'remove_from_pantry' product_id=item.id %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:text-red-800">X</button>
+                            </form>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -104,6 +110,6 @@
             <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
         </div>
     </footer>
-    
+
 </body>
 </html>

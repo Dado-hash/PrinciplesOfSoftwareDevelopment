@@ -132,3 +132,20 @@ def add_to_pantry(request):
 
     return render(request, 'home.html')  # Renderizza il template del form per aggiungere alla dispensa
 
+@login_required
+def remove_from_pantry(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if product.user == request.user:
+        # Se l'attributo always_in_stock è attivo, aggiungi l'oggetto alla lista della spesa
+        if product.always_in_stock:
+            shopping_item = ShoppingList.objects.create(
+                user=request.user,
+                product_name=product.name,
+                quantity=1,  # Puoi modificare la quantità in base alle tue esigenze
+                unit_of_measure=product.unit_of_measure
+            )
+            shopping_item.save()
+        # Rimuovi l'oggetto dalla dispensa
+        product.delete()
+    return redirect('home')
+
