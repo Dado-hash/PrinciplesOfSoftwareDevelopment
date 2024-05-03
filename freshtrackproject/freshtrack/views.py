@@ -76,38 +76,11 @@ def add_to_shopping_list(request):
     return render(request, 'home.html', {'form': form})
 
 @login_required
-def update_shopping_list(request, product_id):
-    product = Product.objects.get(pk=product_id)
-    if product.user == request.user and product.quantity == 0 and not product.always_in_stock:
-        shopping_item = ShoppingList(user=request.user, product_name=product.name, quantity=1)
-        shopping_item.save()
-    return redirect('home')
-
-@login_required
 def remove_from_shopping_list(request, item_id):
     shopping_item = ShoppingList.objects.get(pk=item_id)
     if shopping_item.user == request.user:
         shopping_item.delete()
-    return redirect('shopping_list')
-
-@login_required
-def mark_as_purchased(request, item_id):
-    shopping_item = ShoppingList.objects.get(pk=item_id)
-    if shopping_item.user == request.user:
-        shopping_item.purchased = True
-        shopping_item.save()
-    return redirect('shopping_list')
-
-@login_required
-def product_detail(request, product_id):
-    product = Product.objects.get(pk=product_id)
-    if request.method == 'POST':
-        if 'always_in_stock' in request.POST:
-            product.always_in_stock = True
-            product.save()
-            return redirect('product_detail', product_id=product_id)
-    return render(request, 'product_detail.html', {'product': product})
-
+    return redirect('home')
 
 @login_required
 def add_to_pantry(request):
@@ -117,6 +90,7 @@ def add_to_pantry(request):
         expiration_date = request.POST.get('expiration_date')
         quantity = request.POST.get('quantity')
         unit_of_measure = request.POST.get('unit_of_measure')
+        always_in_stock = request.POST.get('always_in_stock')
 
         # Crea un nuovo oggetto Product nella dispensa dell'utente corrente
         Product.objects.create(
@@ -124,7 +98,8 @@ def add_to_pantry(request):
             name=product_name,
             expiration_date=expiration_date,
             quantity=quantity,
-            unit_of_measure=unit_of_measure
+            unit_of_measure=unit_of_measure,
+            always_in_stock=always_in_stock
         )
 
         # Reindirizza l'utente alla home o alla pagina della dispensa
@@ -142,10 +117,63 @@ def remove_from_pantry(request, product_id):
                 user=request.user,
                 product_name=product.name,
                 quantity=1,  # Puoi modificare la quantità in base alle tue esigenze
-                unit_of_measure=product.unit_of_measure
+                unit_of_measure=product.unit_of_measure,
+                always_in_stock=product.always_in_stock
             )
             shopping_item.save()
         # Rimuovi l'oggetto dalla dispensa
         product.delete()
     return redirect('home')
 
+@login_required
+def remove_and_add_to_pantry(request):
+    if request.method == 'POST':
+        # Recupera gli elementi contrassegnati come acquistati dalla lista della spesa
+        purchased_items = ShoppingList.objects.filter(user=request.user, purchased=True)
+        for item in purchased_items:
+            # Aggiungi ogni elemento alla dispensa come oggetto Product
+            Product.objects.create(
+                user=request.user,
+                name=item.product_name,
+                quantity=item.quantity,
+                unit_of_measure=item.unit_of_measure,
+                expiration_date=None,
+                always_in_stock=item.always_in_stock
+            )
+        # Rimuovi gli elementi contrassegnati come acquistati dalla lista della spesa
+        purchased_items.delete()
+    return redirect('home')
+
+@login_required
+def mark_as_purchased(request, item_id):
+    shopping_item = ShoppingList.objects.get(pk=item_id)
+    if shopping_item.user == request.user:
+        shopping_item.purchased = True
+        shopping_item.save()
+    return redirect('home')
+
+@login_required
+def mark_as_not_purchased(request, item_id):
+    try:
+        shopping_item = ShoppingList.objects.get(pk=item_id, user=request.user)
+        shopping_item.purchased = False
+        shopping_item.save()
+    except ShoppingList.DoesNotExist:
+        pass
+    return redirect('home')
+
+
+def move_to_shopping_list(request, item_id):
+    # Trova l'oggetto della dispensa da spostare
+    pantry_item = Product.objects.get(id=item_id)
+
+    # Crea un nuovo oggetto nella lista della spesa utilizzando i dati dalla dispensa
+    ShoppingList.objects.create(
+        user=request.user,
+        product_name=pantry_item.name,
+        quantity=pantry_item.quantity,
+        unit_of_measure=pantry_item.unit_of_measure,
+        always_in_stock=pantry_item.always_in_stock
+    )
+    pantry_item.delete()
+    return redirect('home')

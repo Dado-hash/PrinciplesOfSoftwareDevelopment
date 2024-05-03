@@ -13,7 +13,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
     unit_of_measure = models.CharField(max_length=1, choices=UNIT_CHOICES)
-    expiration_date = models.DateField()
+    expiration_date = models.DateField(blank=True, null=True, default=None) 
     insertion_date = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=100)
     notes = models.TextField(blank=True, null=True)
@@ -38,3 +38,4 @@ class ShoppingList(models.Model):
     unit_of_measure = models.CharField(max_length=1, choices=UNIT_CHOICES)
     added_date = models.DateTimeField(auto_now_add=True)
     purchased = models.BooleanField(default=False)
+    always_in_stock = models.BooleanField(default=False)

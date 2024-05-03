@@ -29,10 +29,11 @@ class RegisterForm(UserCreationForm):
 class ShoppingListForm(forms.ModelForm):
     class Meta:
         model = ShoppingList
-        fields = ['product_name', 'quantity', 'unit_of_measure']
+        fields = ['product_name', 'quantity', 'unit_of_measure', 'always_in_stock']
 
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'quantity', 'unit_of_measure', 'expiration_date']  # Aggiungi 'quantity' e 'expiration_date' ai campi del form
+        fields = ['name', 'quantity', 'unit_of_measure', 'expiration_date', 'always_in_stock']  # Aggiungi 'quantity' e 'expiration_date' ai campi del form
+        

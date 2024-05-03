@@ -37,17 +37,27 @@
                 {% csrf_token %}
                 <div class="flex mb-4">
                     <input type="text" name="product_name" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
-                    <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg"> <!-- Aggiungi il campo per la quantità -->
-                    <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg"> <!-- Menu a tendina per l'unità di misura -->
-                        <option value="l">Litri</option>
+                    <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg">
+                    <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
+                        <option value="L">Litri</option>
                         <option value="g">Grammi</option>
                         <option value="u">Unità</option>
                     </select>
                     <input type="date" name="expiration_date" class="mr-2 p-2 border rounded-lg">
+                    <!-- La checkbox per "Always in stock" invierà il valore "true" quando selezionata e "false" quando deselezionata -->
+                    <label class="inline-flex items-center">
+                        <input type="hidden" name="always_in_stock" value="False"> <!-- Inizialmente impostato su "false" -->
+                        <input type="checkbox" name="always_in_stock" value="True" class="form-checkbox h-5 w-5 text-blue-600">
+                        <span class="ml-2 mr-2 text-gray-700">Always in stock</span>
+                    </label>
+                    <!-- Bottone di invio -->
                     <input type="submit" value="Add" class="bg-green-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-500 transition duration-300">
                 </div>
             </form>
         </div>
+        
+        
+        
 
         <!-- Aggiunta di prodotti alla lista della spesa -->
         <div class="mb-8">
@@ -58,10 +68,15 @@
                     <input type="text" name="product_name" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
                     <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg"> <!-- Aggiungi il campo per la quantità -->
                     <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg"> <!-- Menu a tendina per l'unità di misura -->
-                        <option value="l">Litri</option>
+                        <option value="L">Litri</option>
                         <option value="g">Grammi</option>
                         <option value="u">Unità</option>
                     </select>
+                    <label class="inline-flex items-center">
+                        <input type="hidden" name="always_in_stock" value="False"> <!-- Inizialmente impostato su "false" -->
+                        <input type="checkbox" name="always_in_stock" value="True" class="form-checkbox h-5 w-5 text-blue-600">
+                        <span class="ml-2 mr-2 text-gray-700">Always in stock</span>
+                    </label>
                     <input type="submit" value="Add" class="bg-green-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-500 transition duration-300">
                 </div>
             </form>
@@ -71,29 +86,83 @@
         <div class="flex-1 px-4 py-8 mx-auto grid grid-cols-2 gap-8"> <!-- Modifica qui aggiungendo la classe grid-cols-2 e gap-8 -->
             <!-- Visualizzazione della dispensa -->
             <div class="mb-8">
-                <h2 class="text-xl font-bold mb-4">Dispensa</h2>
-                <ul>
+                <h2 class="text-xl font-bold mb-4">Pantry</h2>
+                <ul class="space-y-4">
                     {% for item in pantry_items %}
-                        <li>
-                            {{ item.name }} - Quantity: {{ item.quantity }}{{ item.unit_of_measure }}
-                            <form action="{% url 'remove_from_pantry' product_id=item.id %}" method="post" class="inline">
-                                {% csrf_token %}
-                                <button type="submit" class="text-red-600 hover:text-red-800">X</button>
-                            </form>
+                        <li class="flex items-center justify-between">
+                            <div>
+                                {{ item.name }} - {{ item.quantity }}{{ item.unit_of_measure }}
+                            </div>
+                            <div class="flex space-x-2">
+                                <!-- Form per rimuovere il prodotto dalla dispensa -->
+                                <form action="{% url 'remove_from_pantry' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                        Remove
+                                    </button>
+                                </form>
+                                <!-- Form per spostare il prodotto nella lista della spesa -->
+                                <form action="{% url 'move_to_shopping_list' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                        Move to Shopping
+                                    </button>
+                                </form>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
-            </div>
+            </div>                
 
             <!-- Visualizzazione della lista della spesa -->
             <div class="mb-8">
-                <h2 class="text-xl font-bold mb-4">Lista della spesa</h2>
-                <ul>
+                <h2 class="text-xl font-bold mb-4">Shopping list</h2>
+                <!-- Pulsante per rimuovere tutti i prodotti segnati come acquistati e aggiungerli alla dispensa -->
+                <form action="{% url 'remove_and_add_to_pantry' %}" method="post" class="mb-4">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Remove bought products and add to pantry
+                    </button>
+                </form>
+                <ul class="space-y-4">
                     {% for item in shopping_items %}
-                        <li>{{ item.product_name }} - Quantity: {{ item.quantity }}{{ item.unit_of_measure }}</li>
+                        <li class="flex items-center justify-between">
+                            <div>
+                                {% if item.purchased %}
+                                    <del>{{ item.product_name }} - {{ item.quantity }}{{ item.unit_of_measure }}</del>
+                                {% else %}
+                                    {{ item.product_name }} - {{ item.quantity }}{{ item.unit_of_measure }}
+                                {% endif %}
+                            </div>
+                            <div class="flex space-x-2"> <!-- Contenitore flessibile per i pulsanti con spazio tra di essi -->
+                                <!-- Form per rimuovere il prodotto dalla lista della spesa -->
+                                <form action="{% url 'remove_from_shopping_list' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                        Remove
+                                    </button>
+                                </form>
+                                {% if not item.purchased %}
+                                    <!-- Form per segnare il prodotto come acquistato -->
+                                    <form action="{% url 'mark_as_purchased' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">
+                                            Purchased
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                <!-- Form per segnare il prodotto come non acquistato -->
+                                <form action="{% url 'mark_as_not_purchased' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
+                                        Not Purchased
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
                     {% endfor %}
-                </ul>
-            </div>
+                </ul>                
+            </div>                
         </div>
 
 
