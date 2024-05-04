@@ -35,7 +35,14 @@ class ShoppingListForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'quantity', 'unit_of_measure', 'expiration_date', 'always_in_stock']  # Aggiungi 'quantity' e 'expiration_date' ai campi del form
+        fields = ['name', 'quantity', 'unit_of_measure', 'expiration_date', 'always_in_stock']
+        widgets = {
+            'expiration_date': forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}),  # Aggiungi un placeholder per la data
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['expiration_date'].required = False  # Imposta il campo expiration_date come non obbligatorio
 
 
 class EditProductForm(forms.ModelForm):

@@ -2,10 +2,10 @@ import time
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-
+from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm
 from .models import Product, ShoppingList
 
@@ -87,16 +87,24 @@ def add_to_pantry(request):
     if request.method == 'POST':
         # Ricevi i dati dal form
         product_name = request.POST.get('product_name')
-        expiration_date = request.POST.get('expiration_date')
+        expiration_date_str = request.POST.get('expiration_date')
         quantity = request.POST.get('quantity')
         unit_of_measure = request.POST.get('unit_of_measure')
         always_in_stock = request.POST.get('always_in_stock')
+
+        # Verifica se expiration_date_str non è una stringa vuota
+        if expiration_date_str:
+            # Converte la stringa della data in un oggetto datetime
+            expiration_date = parse_date(expiration_date_str)
+            if expiration_date is None:
+                # Se la data non è stata parsata correttamente, restituisci un messaggio di errore
+                return HttpResponse("La data di scadenza non è nel formato corretto. Assicurati di inserire una data nel formato YYYY-MM-DD.")
 
         # Crea un nuovo oggetto Product nella dispensa dell'utente corrente
         Product.objects.create(
             user=request.user,
             name=product_name,
-            expiration_date=expiration_date,
+            expiration_date=expiration_date if expiration_date_str else None,  # Imposta None se la stringa della data è vuota
             quantity=quantity,
             unit_of_measure=unit_of_measure,
             always_in_stock=always_in_stock
@@ -105,7 +113,7 @@ def add_to_pantry(request):
         # Reindirizza l'utente alla home o alla pagina della dispensa
         return redirect('home')  # Puoi cambiare 'home' con la URL della pagina della dispensa se necessario
 
-    return render(request, 'home.html')  # Renderizza il template del form per aggiungere alla dispensa
+    return render(request, 'home.html')  # Renderizza il template del form per aggiungere
 
 @login_required
 def remove_from_pantry(request, product_id):

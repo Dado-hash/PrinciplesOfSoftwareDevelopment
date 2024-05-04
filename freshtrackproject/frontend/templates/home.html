@@ -32,16 +32,16 @@
 
         <!-- Aggiunta di prodotti alla dispensa -->
         <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4">Aggiungi prodotto alla dispensa</h2>
+            <h2 class="text-xl font-bold mb-4">Add a product to the pantry</h2>
             <form action="{% url 'add_to_pantry' %}" method="post">
                 {% csrf_token %}
                 <div class="flex mb-4">
                     <input type="text" name="product_name" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
                     <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg">
                     <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
-                        <option value="L">Litri</option>
-                        <option value="g">Grammi</option>
-                        <option value="u">Unità</option>
+                        <option value="L">Litres</option>
+                        <option value="g">Grams</option>
+                        <option value="u">Units</option>
                     </select>
                     <input type="date" name="expiration_date" class="mr-2 p-2 border rounded-lg">
                     <!-- La checkbox per "Always in stock" invierà il valore "true" quando selezionata e "false" quando deselezionata -->
@@ -61,16 +61,16 @@
 
         <!-- Aggiunta di prodotti alla lista della spesa -->
         <div class="mb-8">
-            <h2 class="text-xl font-bold mb-4">Aggiungi prodotto alla lista della spesa</h2>
+            <h2 class="text-xl font-bold mb-4">Add a product to the shopping list</h2>
             <form action="{% url 'add_to_shopping_list' %}" method="post">
                 {% csrf_token %}
                 <div class="flex mb-4">
                     <input type="text" name="product_name" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
                     <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg"> <!-- Aggiungi il campo per la quantità -->
                     <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg"> <!-- Menu a tendina per l'unità di misura -->
-                        <option value="L">Litri</option>
-                        <option value="g">Grammi</option>
-                        <option value="u">Unità</option>
+                        <option value="L">Litres</option>
+                        <option value="g">Grams</option>
+                        <option value="u">Units</option>
                     </select>
                     <label class="inline-flex items-center">
                         <input type="hidden" name="always_in_stock" value="False"> <!-- Inizialmente impostato su "false" -->
@@ -91,7 +91,7 @@
                     {% for item in pantry_items %}
                         <li class="flex items-center justify-between">
                             <div>
-                                <a href="{% url 'pantry_product_detail' item.id %}" class="text-blue-500 hover:underline">{{ item.name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
+                                <a href="{% url 'pantry_product_detail' item.id %}" class="hover:underline">{{ item.name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
                             </div>
                             <div class="flex space-x-2">
                                 <!-- Form per rimuovere il prodotto dalla dispensa -->
@@ -130,12 +130,12 @@
                         <li class="flex items-center justify-between">
                             <div>
                                 {% if item.purchased %}
-                                    <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="text-blue-500 hover:underline">{{ item.product_name }}</a></del> - {{ item.quantity }}{{ item.unit_of_measure }}
+                                    <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a></del> - {{ item.quantity }}{{ item.unit_of_measure }}
                                 {% else %}
-                                    <a href="{% url 'shopping_list_item_detail' item.id %}" class="text-blue-500 hover:underline">{{ item.product_name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
+                                    <a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
                                 {% endif %}
                             </div>
-                            <div class="flex space-x-2">
+                            <div class="ml-8 flex space-x-2">
                                 <!-- Form per rimuovere il prodotto dalla lista della spesa -->
                                 <form action="{% url 'remove_from_shopping_list' item.id %}" method="post">
                                     {% csrf_token %}

@@ -26,7 +26,7 @@
     </nav>
 
     <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8 mt-8">
-        <h1 class="text-2xl font-bold mb-4">Modifica Prodotto</h1>
+        <h1 class="text-2xl font-bold mb-4">Edit product in shopping list</h1>
         <form action="{% url 'edit_shopping_list_item' item.id %}" method="post">
             {% csrf_token %}
             <div class="mb-4">
@@ -35,9 +35,9 @@
             <div class="mb-4">
                 <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg">
                 <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
-                    <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litri</option>
-                    <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grammi</option>
-                    <option value="u" {% if item.unit_of_measure == 'u' %}selected{% endif %}>Unità</option>
+                    <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litres</option>
+                    <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grams</option>
+                    <option value="u" {% if item.unit_of_measure == 'u' %}selected{% endif %}>Units</option>
                 </select>
             </div>
             <div class="mb-4">
