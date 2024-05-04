@@ -9,16 +9,21 @@ class Product(models.Model):
         ('u', 'Unità'),
     ]
 
+    STATUS_CHOICES = [
+        ('New', 'New'),
+        ('Opened', 'Opened'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
     unit_of_measure = models.CharField(max_length=1, choices=UNIT_CHOICES)
     expiration_date = models.DateField(blank=True, null=True, default=None) 
     insertion_date = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=100)
-    storage_location = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES)
+    storage_location = models.CharField(max_length=100, blank=True, null=True)
     always_in_stock = models.BooleanField(default=False)
 
     def __str__(self):

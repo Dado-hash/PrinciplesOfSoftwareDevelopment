@@ -107,7 +107,10 @@ def add_to_pantry(request):
             expiration_date=expiration_date if expiration_date_str else None,  # Imposta None se la stringa della data è vuota
             quantity=quantity,
             unit_of_measure=unit_of_measure,
-            always_in_stock=always_in_stock
+            always_in_stock=always_in_stock,
+            status="New",
+            category='',
+            storage_location=''
         )
 
         # Reindirizza l'utente alla home o alla pagina della dispensa
@@ -146,7 +149,10 @@ def remove_and_add_to_pantry(request):
                 quantity=item.quantity,
                 unit_of_measure=item.unit_of_measure,
                 expiration_date=None,
-                always_in_stock=item.always_in_stock
+                always_in_stock=item.always_in_stock,
+                status='New',
+                category='',
+                storage_location=''
             )
         # Rimuovi gli elementi contrassegnati come acquistati dalla lista della spesa
         purchased_items.delete()

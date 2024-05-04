@@ -43,7 +43,11 @@
                 <input type="text" name="storage_location" value="{{ item.storage_location }}" placeholder="Storage location" class="mr-2 p-2 border rounded-lg">
             </div>
             <div class="mb-4">
-                <input type="text" name="status" value="{{ item.status }}" placeholder="Status" class="mr-2 p-2 border rounded-lg">
+                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                <select name="status" id="status" class="mr-2 p-2 border rounded-lg">
+                    <option value="New" {% if item.status == 'New' %}selected{% endif %}>New</option>
+                    <option value="Opened" {% if item.status == 'Opened' %}selected{% endif %}>Opened</option>
+                </select>
             </div>
             <div class="mb-4">
                 <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg">
@@ -66,6 +70,7 @@
             <input type="submit" value="Save edits" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
         </form>
     </div>
+    
     
 
     <!-- Footer -->

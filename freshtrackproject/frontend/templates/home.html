@@ -91,8 +91,8 @@
                     {% for item in pantry_items %}
                         <li class="flex items-center justify-between">
                             <div>
-                                <a href="{% url 'pantry_product_detail' item.id %}" class="hover:underline">{{ item.name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
-                            </div>
+                                <a href="{% url 'pantry_product_detail' item.id %}" class="hover:underline">{{ item.name }}</a> - {{ item.quantity }}{% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}
+                            </div>                            
                             <div class="flex space-x-2">
                                 <!-- Form per rimuovere il prodotto dalla dispensa -->
                                 <form action="{% url 'remove_from_pantry' item.id %}" method="post">
@@ -130,11 +130,11 @@
                         <li class="flex items-center justify-between">
                             <div>
                                 {% if item.purchased %}
-                                    <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a></del> - {{ item.quantity }}{{ item.unit_of_measure }}
+                                    <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a></del> - {{ item.quantity }}{% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}
                                 {% else %}
-                                    <a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a> - {{ item.quantity }}{{ item.unit_of_measure }}
+                                    <a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a> - {{ item.quantity }}{% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}
                                 {% endif %}
-                            </div>
+                            </div>                            
                             <div class="ml-8 flex space-x-2">
                                 <!-- Form per rimuovere il prodotto dalla lista della spesa -->
                                 <form action="{% url 'remove_from_shopping_list' item.id %}" method="post">
@@ -152,19 +152,22 @@
                                         </button>
                                     </form>
                                 {% endif %}
-                                <!-- Form per segnare il prodotto come non acquistato -->
-                                <form action="{% url 'mark_as_not_purchased' item.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
-                                        Not Purchased
-                                    </button>
-                                </form>
+                                {% if item.purchased %}
+                                    <!-- Form per segnare il prodotto come non acquistato -->
+                                    <form action="{% url 'mark_as_not_purchased' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
+                                            Not Purchased
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </div>
                         </li>
                     {% endfor %}
                 </ul>                
             </div>                
         </div>
+                
 
 
         <!-- Altre informazioni utili -->
