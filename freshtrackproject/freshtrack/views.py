@@ -2,12 +2,12 @@ import time
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse
 from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm
 from .models import Product, ShoppingList
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 def index(request):
@@ -231,6 +231,20 @@ def update_product(request, item_id):
         # Se il metodo della richiesta è POST, significa che l'utente ha inviato il modulo con i dati aggiornati
         form = EditProductForm(request.POST, instance=item)
         if form.is_valid():
+            # Controllo e sostituzione dei valori None con la stringa vuota ""
+            try:
+                if not form.cleaned_data['category']:
+                    form.cleaned_data['category'] = ''
+            except MultiValueDictKeyError:
+                pass
+            
+            try:
+                if not form.cleaned_data['storage_location']:
+                    form.cleaned_data['storage_location'] = ''
+                    print(form.cleaned_data['storage_location'])
+            except MultiValueDictKeyError:
+                pass
+            
             # Salva i dati aggiornati del prodotto nel database
             form.save()
             # Reindirizza l'utente alla pagina di dettaglio del prodotto appena modificato
@@ -241,4 +255,22 @@ def update_product(request, item_id):
     
     # Il form è invalido, passa il form compilato e gli errori al template
     return render(request, 'product_detail.html', {'form': form, 'item': item, 'errors': form.errors})
+
+
+@login_required
+def pantry(request):
+    # Recupera l'utente attualmente autenticato
+    user = request.user
+
+    # Recupera tutti i prodotti nella dispensa dell'utente
+    pantry_items = Product.objects.filter(user=user)
+
+    # Recupera le categorie uniche dei prodotti nella dispensa dell'utente
+    categories = pantry_items.values_list('category', flat=True).distinct()
+
+    # Recupera le posizioni di archiviazione uniche dei prodotti nella dispensa dell'utente
+    storage_locations = pantry_items.values_list('storage_location', flat=True).distinct()
+
+    # Passa i prodotti nella dispensa, le categorie e le posizioni di archiviazione come contesto al template
+    return render(request, 'pantry.html', {'pantry_items': pantry_items, 'categories': categories, 'storage_locations': storage_locations})
 

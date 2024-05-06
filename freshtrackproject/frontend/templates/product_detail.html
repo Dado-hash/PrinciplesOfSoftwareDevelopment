@@ -15,6 +15,7 @@
                 <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
                 <div class="flex items-center">
                     <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
                     <a href="#" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
                     <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
                         {% csrf_token %}
@@ -37,10 +38,10 @@
                 <input type="date" name="expiration_date" id="expiration_date" value="{{ item.expiration_date|date:'Y-m-d' }}" class="mt-1 p-2 border rounded-lg">
             </div>
             <div class="mb-4">
-                <input type="text" name="category" value="{{ item.category }}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
+                <input type="text" name="category" value="{% if item.category %}{{ item.category }}{% else %}{% endif %}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
             </div>
             <div class="mb-4">
-                <input type="text" name="storage_location" value="{{ item.storage_location }}" placeholder="Storage location" class="mr-2 p-2 border rounded-lg">
+                <input type="text" name="storage_location" value="{% if item.storage_location %}{{ item.storage_location }}{% else %}{% endif %}" placeholder="Storage location" class="mr-2 p-2 border rounded-lg">
             </div>
             <div class="mb-4">
                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
