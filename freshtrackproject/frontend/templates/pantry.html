@@ -29,7 +29,7 @@
     </nav>
 
     <!-- Content -->
-    <div class="flex-1 px-4 py-8 mx-auto">
+    <div class="flex-1 px-4 py-8 mx-auto w-1/2">
         <!-- Filtri -->
         <div class="mb-4">
             <h2 class="text-xl font-bold mb-2">Filters</h2>
@@ -39,10 +39,10 @@
                         <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
                         <select name="category" id="category" class="p-2 border rounded-lg">
                             <option value="">All</option>
-                            <!-- Popola le opzioni con le categorie -->
+                            <!-- Popola le opzioni con le categorie non vuote -->
                             {% for category in categories %}
                                 {% if category %}
-                                    <option value="{{ category }}">{{ category }}</option>
+                                    <option value="{{ category }}" {% if category == selected_category %} selected {% endif %}>{{ category }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -51,22 +51,24 @@
                         <label for="storage_location" class="block text-sm font-medium text-gray-700">Storage Location</label>
                         <select name="storage_location" id="storage_location" class="p-2 border rounded-lg">
                             <option value="">All</option>
-                            <!-- Popola le opzioni con le posizioni di archiviazione -->
+                            <!-- Popola le opzioni con le posizioni di archiviazione non vuote -->
                             {% for location in storage_locations %}
                                 {% if location %}
-                                    <option value="{{ location }}">{{ location }}</option>  
+                                    <option value="{{ location }}" {% if location == selected_storage_location %} selected {% endif %}>{{ location }}</option>  
                                 {% endif %}
                             {% endfor %}
                         </select>
                     </div>
                     <div class="w-1/3">
                     </div>
-                    <div class="w-1/3">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-8">Apply Filters</button>
+                    <div class="w-1/3 flex items-center justify-center">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-auto">Apply Filters</button>
                     </div>
                 </div>
             </form>
         </div>
+
+
 
         <!-- Lista dei prodotti nella dispensa -->
         <div class="mb-8">

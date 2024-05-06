@@ -289,6 +289,23 @@ def pantry(request):
     # Recupera le posizioni di archiviazione uniche dei prodotti nella dispensa dell'utente
     storage_locations = pantry_items.values_list('storage_location', flat=True).distinct()
 
-    # Passa i prodotti nella dispensa, le categorie e le posizioni di archiviazione come contesto al template
-    return render(request, 'pantry.html', {'pantry_items': pantry_items, 'categories': categories, 'storage_locations': storage_locations})
+    # Applica i filtri se sono presenti nei parametri GET
+    category_filter = request.GET.get('category')
+    storage_location_filter = request.GET.get('storage_location')
+
+    if category_filter:
+        pantry_items = pantry_items.filter(category=category_filter)
+    if storage_location_filter:
+        pantry_items = pantry_items.filter(storage_location=storage_location_filter)
+
+    # Passa i prodotti nella dispensa, le categorie e le posizioni di archiviazione filtrati come contesto al template
+    return render(request, 'pantry.html', {
+        'pantry_items': pantry_items,
+        'categories': categories,
+        'storage_locations': storage_locations,
+        'selected_category': category_filter,  # Passa il valore selezionato per il filtro categoria
+        'selected_storage_location': storage_location_filter,  # Passa il valore selezionato per il filtro di posizione di archiviazione
+    })
+
+
 
