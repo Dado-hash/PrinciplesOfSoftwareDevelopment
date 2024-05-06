@@ -75,11 +75,18 @@
                 <!-- Cicla attraverso i prodotti nella dispensa -->
                 {% for item in pantry_items %}
                     <div class="bg-white rounded-lg shadow-md p-4">
-                        <h3 class="text-lg font-semibold mb-2">{{ item.name }}</h3>
+                        <div class="flex justify-between">
+                            <h3 class="text-lg font-semibold mb-2">{{ item.name }}</h3>
+                            <form action="{% url 'remove_from_pantry_page' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-red-500 text-white font-bold px-2 py-1 rounded-lg">Delete</button>
+                            </form>
+                        </div>
                         <p>Quantity: {{ item.quantity }} {% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}</p>
                         <p>Category: {{ item.category }}</p>
                         <p>Storage Location: {{ item.storage_location }}</p>
                         <p>Expiration Date: {{ item.expiration_date }}</p>
+                        <p>Status: {{ item.status }}</p>
                         <!-- Link alla pagina dettaglio del prodotto -->
                         <a href="{% url 'pantry_product_detail' item.id %}" class="text-blue-500 hover:underline">View Details</a>
                     </div>

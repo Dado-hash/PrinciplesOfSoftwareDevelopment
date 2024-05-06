@@ -137,6 +137,24 @@ def remove_from_pantry(request, product_id):
     return redirect('home')
 
 @login_required
+def remove_from_pantry_page(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if product.user == request.user:
+        # Se l'attributo always_in_stock è attivo, aggiungi l'oggetto alla lista della spesa
+        if product.always_in_stock:
+            shopping_item = ShoppingList.objects.create(
+                user=request.user,
+                product_name=product.name,
+                quantity=1,  # Puoi modificare la quantità in base alle tue esigenze
+                unit_of_measure=product.unit_of_measure,
+                always_in_stock=product.always_in_stock
+            )
+            shopping_item.save()
+        # Rimuovi l'oggetto dalla dispensa
+        product.delete()
+    return redirect('pantry')
+
+@login_required
 def remove_and_add_to_pantry(request):
     if request.method == 'POST':
         # Recupera gli elementi contrassegnati come acquistati dalla lista della spesa
