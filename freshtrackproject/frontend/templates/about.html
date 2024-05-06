@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FreshTrack</title>
+    <!-- Integra Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Integra Font Awesome per icone -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg h-20">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
+                <div class="flex items-center"> <!-- Modifica il container per contenere entrambi i link -->
+                    {% if user.is_authenticated %}
+                        <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
+                    {% endif %}
+                    <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                    {% if user.is_authenticated %}
+                    <!-- Mostra il form per il logout solo se l'utente è autenticato -->
+                    <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
+                        {% csrf_token %}
+                        <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
+                    </form>
+                    {% else %}
+                        <!-- Mostra il tasto "Get Started" se l'utente non è loggato -->
+                        <a href="{% url 'register' %}" class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Contenuto della pagina -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-4">About Us</h1>
+        <div class="grid grid-cols-3 gap-4">
+            <!-- Sviluppatore 1 -->
+            <div class="text-center">
+                <img src="{% static 'admin/img/Davide.jpg' %}" alt="Davide Galbiati" class="rounded-image mb-2">
+                <h2 class="font-semibold">Developer 1</h2>
+                <p>Web Developer</p>
+                <!-- Aggiungi altre informazioni se necessario -->
+            </div>
+            <!-- Sviluppatore 2 -->
+            <div class="text-center">
+                <img src="{% static 'admin/img/Giuseppe.jpg' %}" alt="Giuseppe Silvestro" class="rounded-image mb-2">
+                <h2 class="font-semibold">Developer 2</h2>
+                <p>Software Engineer</p>
+                <!-- Aggiungi altre informazioni se necessario -->
+            </div>
+            <!-- Aggiungi più sviluppatori se necessario -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4 mt-auto">
+        <div class="container mx-auto px-4">
+            <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
