@@ -18,9 +18,7 @@
             <div class="flex justify-between items-center py-4">
                 <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
                 <div class="flex items-center"> <!-- Modifica il container per contenere entrambi i link -->
-                    {% if user.is_authenticated %}
-                        <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
-                    {% endif %}
+                    <a href="/" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
                     {% if user.is_authenticated %}
                         <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
                     {% endif %}
@@ -44,21 +42,15 @@
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">About Us</h1>
         <div class="grid grid-cols-3 gap-4">
-            <!-- Sviluppatore 1 -->
-            <div class="text-center">
-                <img src="{% static 'admin/img/Davide.jpg' %}" alt="Davide Galbiati" class="rounded-image mb-2">
-                <h2 class="font-semibold">Developer 1</h2>
-                <p>Web Developer</p>
-                <!-- Aggiungi altre informazioni se necessario -->
-            </div>
-            <!-- Sviluppatore 2 -->
-            <div class="text-center">
-                <img src="{% static 'admin/img/Giuseppe.jpg' %}" alt="Giuseppe Silvestro" class="rounded-image mb-2">
-                <h2 class="font-semibold">Developer 2</h2>
-                <p>Software Engineer</p>
-                <!-- Aggiungi altre informazioni se necessario -->
-            </div>
-            <!-- Aggiungi più sviluppatori se necessario -->
+            {% for developer in developers %}
+                <!-- Sviluppatore 1 -->
+                <div class="text-center">
+                    <img src="{{ developer.image.url }}" alt= "{{ developer.name }}" class="rounded-image mb-2">
+                    <h2 class="font-semibold">Developer {{ developer.developerNum }} </h2>
+                    <p>{{ developer.occupation }}</p>
+                    <!-- Aggiungi altre informazioni se necessario -->
+                </div>
+            {% endfor %}
         </div>
     </div>
 

@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm
-from .models import Product, ShoppingList
+from .models import Product, ShoppingList, Developer
 from django.utils.datastructures import MultiValueDictKeyError
 
 
@@ -49,7 +49,8 @@ def register(request):
     return render(request, "register.html", {"form": form})
 
 def about(request):
-    return render(request, 'about.html')
+    developer = Developer.objects.all()
+    return render(request, 'about.html', {'developers': developer})
 
 @login_required
 def home(request):
