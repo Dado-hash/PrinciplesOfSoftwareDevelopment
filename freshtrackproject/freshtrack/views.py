@@ -92,6 +92,8 @@ def add_to_pantry(request):
         # Ricevi i dati dal form
         product_name = request.POST.get('product_name')
         expiration_date_str = request.POST.get('expiration_date')
+        # Converte la stringa della data in un oggetto datetime
+        expiration_date = parse_date(expiration_date_str)
         quantity = request.POST.get('quantity')
         unit_of_measure = request.POST.get('unit_of_measure')
         always_in_stock = request.POST.get('always_in_stock')
@@ -99,15 +101,14 @@ def add_to_pantry(request):
 
         # Verifica se expiration_date_str non è una stringa vuota
         if expiration_date_str:
-            # Converte la stringa della data in un oggetto datetime
-            expiration_date = parse_date(expiration_date_str)
+            
             if expiration_date is None:
                 # Se la data non è stata parsata correttamente, restituisci un messaggio di errore
                 return HttpResponse("La data di scadenza non è nel formato corretto. Assicurati di inserire una data nel formato YYYY-MM-DD.")
 
         # Se un oggetto è già presente, non se ne crea uno nuovo ma si aggiunge a quello esistente
         product = findObjectPantry(product_name)
-        if product!=None:
+        if product!=None and product.expiration_date==expiration_date and product.unit_of_measure==unit_of_measure and product.storage_location==storage_location:
             product.quantity += int(quantity)
             product.save()
         else:
