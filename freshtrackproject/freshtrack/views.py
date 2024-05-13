@@ -107,7 +107,7 @@ def add_to_pantry(request):
         # Crea un nuovo oggetto Product nella dispensa dell'utente corrente
         Product.objects.create(
             user=request.user,
-            name=product_name,
+            name=product_name.capitalize(),
             expiration_date=expiration_date if expiration_date_str else None,  # Imposta None se la stringa della data è vuota
             quantity=quantity,
             unit_of_measure=unit_of_measure,
