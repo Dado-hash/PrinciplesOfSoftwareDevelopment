@@ -95,6 +95,7 @@ def add_to_pantry(request):
         quantity = request.POST.get('quantity')
         unit_of_measure = request.POST.get('unit_of_measure')
         always_in_stock = request.POST.get('always_in_stock')
+        storage_location = request.POST.get('storage_location')
 
         # Verifica se expiration_date_str non è una stringa vuota
         if expiration_date_str:
@@ -114,7 +115,7 @@ def add_to_pantry(request):
             always_in_stock=always_in_stock,
             status="New",
             category= food_categories(product_name),
-            storage_location=''
+            storage_location=storage_location
         )
 
         # Reindirizza l'utente alla home o alla pagina della dispensa

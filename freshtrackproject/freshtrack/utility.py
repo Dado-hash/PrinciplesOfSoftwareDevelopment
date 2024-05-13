@@ -18,3 +18,5 @@ def food_categories (input_string):
     
     # If the string does not match any category, return None
     return None
+
+
