@@ -45,14 +45,3 @@ class ShoppingList(models.Model):
     purchased = models.BooleanField(default=False)
     always_in_stock = models.BooleanField(default=False)
     notes = models.TextField(blank=True, null=True)
-
-
-class Developer(models.Model):
-    image = models.ImageField()
-    name = models.CharField(max_length=30)
-    occupation = models.CharField(max_length=30, default='')
-    developerNum = models.IntegerField()
-
-
-    def __str__(self):
-        return self.name
