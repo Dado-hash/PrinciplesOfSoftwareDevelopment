@@ -1,4 +1,5 @@
-def categorize_string(input_string):
+# Function that return the food category of a product
+def food_categories (input_string):
     food_categories = {
         "Fruit": ["apple", "banana", "orange", "strawberry", "grape"],
         "Vegetable": ["carrot", "tomato", "spinach", "broccoli", "cucumber"],
@@ -17,11 +18,3 @@ def categorize_string(input_string):
     
     # If the string does not match any category, return None
     return None
-
-# Esempio di utilizzo della funzione
-input_string = 'parola2'
-categoria = categorize_string(input_string)
-if categoria:
-    print(f'La stringa "{input_string}" appartiene alla categoria: {categoria}')
-else:
-    print(f'La stringa "{input_string}" non appartiene a nessuna categoria.')
