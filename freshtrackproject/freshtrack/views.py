@@ -8,7 +8,7 @@ from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
-from .utility import food_categories
+from .utility import food_categories, findObjectPantry
 
 
 
@@ -105,17 +105,23 @@ def add_to_pantry(request):
                 # Se la data non è stata parsata correttamente, restituisci un messaggio di errore
                 return HttpResponse("La data di scadenza non è nel formato corretto. Assicurati di inserire una data nel formato YYYY-MM-DD.")
 
-        # Crea un nuovo oggetto Product nella dispensa dell'utente corrente
-        Product.objects.create(
-            user=request.user,
-            name=product_name.capitalize(),
-            expiration_date=expiration_date if expiration_date_str else None,  # Imposta None se la stringa della data è vuota
-            quantity=quantity,
-            unit_of_measure=unit_of_measure,
-            always_in_stock=always_in_stock,
-            status="New",
-            category= food_categories(product_name),
-            storage_location=storage_location
+        # Se un oggetto è già presente, non se ne crea uno nuovo ma si aggiunge a quello esistente
+        product = findObjectPantry(product_name)
+        if product!=None:
+            product.quantity += int(quantity)
+            product.save()
+        else:
+            # Crea un nuovo oggetto Product nella dispensa dell'utente corrente
+            Product.objects.create(
+                user=request.user,
+                name=product_name.capitalize(),
+                expiration_date=expiration_date if expiration_date_str else None,  # Imposta None se la stringa della data è vuota
+                quantity=quantity,
+                unit_of_measure=unit_of_measure,
+                always_in_stock=always_in_stock,
+                status="New",
+                category= food_categories(product_name),
+                storage_location=storage_location
         )
 
         # Reindirizza l'utente alla home o alla pagina della dispensa
@@ -175,7 +181,7 @@ def remove_and_add_to_pantry(request):
                 always_in_stock=item.always_in_stock,
                 status='New',
                 category= food_categories(item.product_name),
-                storage_location=''
+                storage_location='Larder'
             )
         # Rimuovi gli elementi contrassegnati come acquistati dalla lista della spesa
         purchased_items.delete()

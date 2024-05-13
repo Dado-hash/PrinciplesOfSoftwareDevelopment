@@ -1,3 +1,7 @@
+
+from .models import Product
+
+
 # Function that return the food category of a product
 def food_categories (input_string):
     food_categories = {
@@ -19,4 +23,10 @@ def food_categories (input_string):
     # If the string does not match any category, return None
     return None
 
+def findObjectPantry(name):
+    try:
+        product = Product.objects.get(name=name.capitalize())
+        return product
+    except Product.DoesNotExist:
+        return None
 
