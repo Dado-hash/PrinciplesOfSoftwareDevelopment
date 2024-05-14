@@ -38,7 +38,7 @@
                 {% csrf_token %}
                 <div class="flex mb-4">
                     <input type="text" name="product_name" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
-                    <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg">
+                    <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg" min="0">
                     <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
                         <option value="L">Litres</option>
                         <option value="g">Grams</option>
@@ -68,7 +68,7 @@
                 {% csrf_token %}
                 <div class="flex mb-4">
                     <input type="text" name="product_name" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
-                    <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg"> <!-- Aggiungi il campo per la quantità -->
+                    <input type="number" name="quantity" placeholder="Quantity" class="mr-2 p-2 border rounded-lg" min="0"> <!-- Aggiungi il campo per la quantità -->
                     <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg"> <!-- Menu a tendina per l'unità di misura -->
                         <option value="L">Litres</option>
                         <option value="g">Grams</option>
