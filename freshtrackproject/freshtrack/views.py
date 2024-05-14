@@ -9,6 +9,7 @@ from .forms import EditProductForm, RegisterForm, ShoppingListForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from .utility import food_categories, findObjectPantry
+from django.contrib import messages
 
 
 
@@ -243,6 +244,7 @@ def edit_shopping_list_item(request, item_id):
         if form.is_valid():
             # Salva i dati aggiornati dell'elemento della lista della spesa nel database
             form.save()
+            messages.success(request, 'Item updated successfully')
             # Reindirizza l'utente alla pagina di dettaglio dell'elemento della lista della spesa appena modificato
             return redirect('shopping_list_item_detail', item_id=item.id)
     else:
@@ -277,6 +279,7 @@ def update_product(request, item_id):
             
             # Salva i dati aggiornati del prodotto nel database
             form.save()
+            messages.success(request, 'Item updated successfully')
             # Reindirizza l'utente alla pagina di dettaglio del prodotto appena modificato
             return redirect('pantry_product_detail', item_id=item.id)
     else:

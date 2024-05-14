@@ -31,9 +31,16 @@
             {% csrf_token %}
             <div class="mb-4">
                 <input type="text" name="product_name" value="{{ item.product_name }}" placeholder="Nome Prodotto" class="mr-2 p-2 border rounded-lg">
+                {% if form.name.errors %}
+                <div class="text-red-500 text-sm mt-1">
+                    {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %} 
             </div>
             <div class="mb-4">
-                <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg">
+                <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg" min="0">
                 <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
                     <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litres</option>
                     <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grams</option>

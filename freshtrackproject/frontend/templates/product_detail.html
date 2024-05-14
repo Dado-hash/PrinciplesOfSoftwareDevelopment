@@ -6,8 +6,36 @@
     <title>{{ product.name }}</title>
     <!-- Integra Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .text-red-500 {
+            color: #f56565;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <!-- Navbar -->
     <nav class="bg-white shadow-lg h-20">
         <div class="container mx-auto px-4">
@@ -31,14 +59,21 @@
         <form action="{% url 'update_product' item.id %}" method="post">
             {% csrf_token %}
             <div class="mb-4">
-                <input type="text" name="name" value="{{ item.name }}" placeholder="Product name" class="mr-2 p-2 border rounded-lg">
+                <input type="text" name="name" value="{{ item.name }}" placeholder="Product name" class="mr-2 p-2 border rounded-lg"> 
+                {% if form.name.errors %}
+                <div class="text-red-500 text-sm mt-1">
+                    {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}              
             </div>
             <div class="mb-4">
                 <label for="expiration_date" class="block text-sm font-medium text-gray-700">Expiration Date</label>
                 <input type="date" name="expiration_date" id="expiration_date" value="{{ item.expiration_date|date:'Y-m-d' }}" class="mt-1 p-2 border rounded-lg">
             </div>
             <div class="mb-4">
-                <label for="Food_Category" class="block text-sm font-medium text-gray-700">Expiration Date</label>
+                <label for="Food_Category" class="block text-sm font-medium text-gray-700">Food Category</label>
                 <input type="text" name="category" value="{% if item.category %}{{ item.category }}{% else %}{% endif %}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
             </div>
             <div class="mb-4">
@@ -56,7 +91,7 @@
                 </select>
             </div>
             <div class="mb-4">
-                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                <label for="quantity" class="block text-sm font-medium text-gray-700" min="0">Quantity</label>
                 <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg">
                 <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
                     <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litres</option>
