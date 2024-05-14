@@ -6,8 +6,36 @@
     <title>Shopping List Item - {{ item.product_name }}</title>
     <!-- Integra Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .text-red-500 {
+            color: #f56565;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <!-- Navbar -->
     <nav class="bg-white shadow-lg h-20">
         <div class="container mx-auto px-4">
@@ -15,6 +43,7 @@
                 <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
                 <div class="flex items-center">
                     <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
                     <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
                     <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
                         {% csrf_token %}
