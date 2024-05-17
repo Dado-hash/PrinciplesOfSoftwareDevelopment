@@ -46,19 +46,41 @@
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">About Us</h1>
         <div class="grid grid-cols-3 gap-4">
-            <!-- Sviluppatore 1 -->
-            <div class="text-center">
-                <img src="{% static 'admin/img/Davide.jpg' %}" alt="Davide Galbiati" class="rounded-image mb-2">
-                <h2 class="font-semibold">Developer 1</h2>
-                <p>Web Developer</p>
-                <!-- Aggiungi altre informazioni se necessario -->
-            </div>
-            <!-- Sviluppatore 2 -->
-            <div class="text-center">
-                <img src="{% static 'admin/img/Giuseppe.jpg' %}" alt="Giuseppe Silvestro" class="rounded-image mb-2">
-                <h2 class="font-semibold">Developer 2</h2>
-                <p>Software Engineer</p>
-                <!-- Aggiungi altre informazioni se necessario -->
+            <style>
+                .developer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+        
+                .developer-image {
+                    width: 400px; /* Imposta la larghezza desiderata */
+                    height: 400px; /* Imposta l'altezza desiderata */
+                    object-fit: cover; /* Mantiene le proporzioni delle immagini e le ritaglia per adattarle al contenitore */
+                    margin-bottom: 8px;
+                }
+        
+                .developer-info {
+                    text-align: center; /* Centra il testo */
+                }
+            </style>
+                <!-- Sviluppatore 1 -->
+                <div class="developer text-center">
+                    <img src="{% static 'admin/img/Davide.jpg' %}" alt="Davide Galbiati" class="developer-image rounded-image mb-2">
+                    <div class="developer-info">
+                        <h2 class="font-semibold">Developer 1</h2>
+                        <p>Web Developer</p>
+                    </div>
+                </div>
+                <!-- Sviluppatore 2 -->
+                <div class="developer text-center">
+                    <img src="{% static 'admin/img/Giuseppe.jpg' %}" alt="Giuseppe Silvestro" class="developer-image rounded-image mb-2">
+                    <div class="developer-info">
+                        <h2 class="font-semibold">Developer 2</h2>
+                        <p>Software Engineer</p>
+                    </div>
+                </div>
+                <!-- Aggiungi più sviluppatori se necessario -->
             </div>
             <!-- Aggiungi più sviluppatori se necessario -->
         </div>
