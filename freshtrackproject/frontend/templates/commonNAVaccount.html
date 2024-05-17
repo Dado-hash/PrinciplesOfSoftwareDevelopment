@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Integra Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Integra Font Awesome per icone -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset del margine e del padding del corpo */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh; /* Imposta l'altezza minima del corpo per occupare l'intera altezza della finestra del browser */
+            display: flex;
+            flex-direction: column; /* Imposta il layout del corpo in colonna */
+        }
+
+        /* Stile per il contenuto principale */
+        .content {
+            flex: 1; /* Fai sì che il contenuto principale occupi tutto lo spazio rimanente */
+            padding-bottom: 60px; /* Altezza del footer */
+            margin-bottom: auto; /* Sposta il margine inferiore al fondo della finestra del browser */
+        }
+
+        /* Stile per il footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            position: sticky;
+            bottom: 0;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-100"> <!-- Applica flex-col al body per un layout a colonna -->
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg h-20">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
+                <div class="flex items-center"> <!-- Modifica il container per contenere entrambi i link -->
+                    <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
+                    <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
+                    <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                    <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
+                            {% csrf_token %}
+                            <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
+                        </form> <!-- Utilizza un form per il logout -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4">
+            <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+

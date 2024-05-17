@@ -1,100 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping List Item - {{ item.product_name }}</title>
-    <!-- Integra Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .success {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .text-red-500 {
-            color: #f56565;
-        }
-        .text-sm {
-            font-size: 0.875rem;
-        }
-        .mt-1 {
-            margin-top: 0.25rem;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="success">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    <!-- Navbar -->
-    <nav class="bg-white shadow-lg h-20">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
-                <div class="flex items-center">
-                    <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
-                    <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
-                    <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
-                    <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
-                        {% csrf_token %}
-                        <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
+{% extends 'commonNAVaccount.html' %}
 
-    <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8 mt-8">
-        <h1 class="text-2xl font-bold mb-4">Edit product in shopping list</h1>
-        <form action="{% url 'edit_shopping_list_item' item.id %}" method="post">
-            {% csrf_token %}
-            <div class="mb-4">
-                <input type="text" name="product_name" value="{{ item.product_name }}" placeholder="Nome Prodotto" class="mr-2 p-2 border rounded-lg">
-                {% if form.name.errors %}
-                <div class="text-red-500 text-sm mt-1">
-                    {% for error in form.name.errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %} 
-            </div>
-            <div class="mb-4">
-                <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg" min="0">
-                <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
-                    <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litres</option>
-                    <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grams</option>
-                    <option value="u" {% if item.unit_of_measure == 'u' %}selected{% endif %}>Units</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label class="inline-flex items-center">
-                    <input type="hidden" name="always_in_stock" value="False">
-                    <input type="checkbox" name="always_in_stock" value="True" class="form-checkbox h-5 w-5 text-blue-600" {% if item.always_in_stock %}checked{% endif %}>
-                    <span class="ml-2 mr-2 text-gray-700">Always in stock</span>
-                </label>
-            </div>
-            <div class="mb-4">
-                <textarea name="notes" placeholder="Note" class="p-2 border rounded-lg w-full">{{ item.notes }}</textarea>
-            </div>
-            <input type="submit" value="Save edits" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
-        </form>
+{% block title %} Shopping List Item - {{ item.product_name }} {% endblock %}
+
+{% block content %}
+
+<style>
+    .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .text-red-500 {
+        color: #f56565;
+    }
+    .text-sm {
+        font-size: 0.875rem;
+    }
+    .mt-1 {
+        margin-top: 0.25rem;
+    }
+</style>
+
+{% if messages %}
+<div class="messages">
+{% for message in messages %}
+    <div class="success">
+        {{ message }}
     </div>
+{% endfor %}
+</div>
+{% endif %}
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-4 fixed bottom-0 w-full">
-        <div class="container mx-auto">
-            <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
+
+<div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8 mt-8">
+    <h1 class="text-2xl font-bold mb-4">Edit product in shopping list</h1>
+    <form action="{% url 'edit_shopping_list_item' item.id %}" method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+            <input type="text" name="product_name" value="{{ item.product_name }}" placeholder="Nome Prodotto" class="mr-2 p-2 border rounded-lg">
+            {% if form.name.errors %}
+            <div class="text-red-500 text-sm mt-1">
+                {% for error in form.name.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %} 
         </div>
-    </footer>
-</body>
-</html>
+        <div class="mb-4">
+            <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantità" class="mr-2 p-2 border rounded-lg" min="0">
+            <select name="unit_of_measure" class="mr-2 p-2 border rounded-lg">
+                <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litres</option>
+                <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grams</option>
+                <option value="u" {% if item.unit_of_measure == 'u' %}selected{% endif %}>Units</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="inline-flex items-center">
+                <input type="hidden" name="always_in_stock" value="False">
+                <input type="checkbox" name="always_in_stock" value="True" class="form-checkbox h-5 w-5 text-blue-600" {% if item.always_in_stock %}checked{% endif %}>
+                <span class="ml-2 mr-2 text-gray-700">Always in stock</span>
+            </label>
+        </div>
+        <div class="mb-4">
+            <textarea name="notes" placeholder="Note" class="p-2 border rounded-lg w-full">{{ item.notes }}</textarea>
+        </div>
+        <input type="submit" value="Save edits" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
+    </form>
+</div>
+
+
+{% endblock %}
