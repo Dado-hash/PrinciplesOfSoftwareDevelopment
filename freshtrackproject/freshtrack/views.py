@@ -8,7 +8,7 @@ from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
-from .utility import food_categories, findObjectPantry
+from .utility import food_categories, findObjectPantry, get_notifications_for_user
 from django.contrib import messages
 
 
@@ -320,6 +320,12 @@ def pantry(request):
         'storage_locations': storage_locations,
         'selected_category': category_filter,  # Passa il valore selezionato per il filtro categoria
         'selected_storage_location': storage_location_filter,  # Passa il valore selezionato per il filtro di posizione di archiviazione
+    })
+
+def notifications_view(request):
+    notifications = get_notifications_for_user(request.user)
+    return render(request, 'notifications.html', {
+        'notifications': notifications,
     })
 
 

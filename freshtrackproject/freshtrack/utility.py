@@ -1,5 +1,6 @@
 
-from .models import Product
+from .models import Product, Notification
+
 
 
 # Function that return the food category of a product
@@ -30,3 +31,5 @@ def findObjectPantry(name):
     except Product.DoesNotExist:
         return None
 
+def get_notifications_for_user(user):
+    return Notification.objects.filter(user=user, is_read=False).order_by('-timestamp')

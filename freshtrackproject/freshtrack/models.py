@@ -45,3 +45,12 @@ class ShoppingList(models.Model):
     purchased = models.BooleanField(default=False)
     always_in_stock = models.BooleanField(default=False)
     notes = models.TextField(blank=True, null=True)
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Notification for {self.user.username}: {self.message}'

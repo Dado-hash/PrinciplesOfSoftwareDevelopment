@@ -10,6 +10,60 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
     <!-- Integra Font Awesome per icone -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset del margine e del padding del corpo */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh; /* Imposta l'altezza minima del corpo per occupare l'intera altezza della finestra del browser */
+            display: flex;
+            flex-direction: column; /* Imposta il layout del corpo in colonna */
+        }
+
+        /* Stile per il contenuto principale */
+        .content {
+            flex: 1; /* Fai sì che il contenuto principale occupi tutto lo spazio rimanente */
+            padding-bottom: 60px; /* Altezza del footer */
+            margin-bottom: auto; /* Sposta il margine inferiore al fondo della finestra del browser */
+        }
+
+        /* Stile per il footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            position: sticky;
+            bottom: 0;
+        }
+
+        /* Stili personalizzati per la campanellina */
+        .notifications-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notifications-icon .fa-bell {
+            font-size: 1.2rem; /* Dimensione della campanellina */
+        }
+
+        .notifications-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            font-size: 0.75rem; /* Riduci la dimensione del testo */
+            line-height: 1; /* Imposta l'altezza della linea a 1 per evitare eccessivi spazi */
+            display: none; /* Nascondi il badge per impostazione predefinita */
+        }
+
+        .notifications-icon.has-notifications .badge {
+            display: inline-block; /* Mostra il badge solo se ci sono notifiche */
+        }
+    </style>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100">
     <!-- Navbar -->
@@ -26,13 +80,19 @@
                     {% if user.is_authenticated %}
                         <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
                     {% endif %}
-                    <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                        <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
                     {% if user.is_authenticated %}
-                    <!-- Mostra il form per il logout solo se l'utente è autenticato -->
-                    <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
-                        {% csrf_token %}
-                        <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
-                    </form>
+                        <a href="/notifications" class="text-gray-600 hover:text-gray-800 mr-4 notifications-icon {% if notifications_count > 0 %}has-notifications{% endif %}">
+                            <i class="fas fa-bell"></i>
+                            {% if notifications_count > 0 %}
+                                <span class="badge">{{ notifications_count }}</span>
+                            {% endif %}
+                        </a>
+                        <!-- Mostra il form per il logout solo se l'utente è autenticato -->
+                        <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
+                            {% csrf_token %}
+                            <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
+                        </form>
                     {% else %}
                         <!-- Mostra il tasto "Get Started" se l'utente non è loggato -->
                         <a href="{% url 'register' %}" class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Get Started</a>

@@ -16,11 +16,12 @@
             min-height: 100vh; /* Imposta l'altezza minima del corpo per occupare l'intera altezza della finestra del browser */
             display: flex;
             flex-direction: column; /* Imposta il layout del corpo in colonna */
+            min-height: 100vh; /* Altezza minima del corpo per occupare l'intera altezza della finestra del browser */
         }
 
         /* Stile per il contenuto principale */
         .content {
-            flex: 1; /* Fai sì che il contenuto principale occupi tutto lo spazio rimanente */
+            flex-grow: 1; /* Fai sì che il contenuto principale cresca per riempire lo spazio disponibile */
             padding-bottom: 60px; /* Altezza del footer */
             margin-bottom: auto; /* Sposta il margine inferiore al fondo della finestra del browser */
         }
@@ -35,6 +36,32 @@
             bottom: 0;
         }
 
+        /* Stili personalizzati per la campanellina */
+        .notifications-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notifications-icon .fa-bell {
+            font-size: 1.2rem; /* Dimensione della campanellina */
+        }
+
+        .notifications-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            font-size: 0.75rem; /* Riduci la dimensione del testo */
+            line-height: 1; /* Imposta l'altezza della linea a 1 per evitare eccessivi spazi */
+            display: none; /* Nascondi il badge per impostazione predefinita */
+        }
+
+        .notifications-icon.has-notifications .badge {
+            display: inline-block; /* Mostra il badge solo se ci sono notifiche */
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100"> <!-- Applica flex-col al body per un layout a colonna -->
@@ -47,10 +74,16 @@
                     <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
                     <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
                     <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
+                    <a href="/notifications" class="text-gray-600 hover:text-gray-800 mr-4 notifications-icon {% if notifications_count > 0 %}has-notifications{% endif %}">
+                        <i class="fas fa-bell"></i>
+                        {% if notifications_count > 0 %}
+                            <span class="badge">{{ notifications_count }}</span>
+                        {% endif %}
+                    </a>
                     <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
-                            {% csrf_token %}
-                            <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
-                        </form> <!-- Utilizza un form per il logout -->
+                        {% csrf_token %}
+                        <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
+                    </form> <!-- Utilizza un form per il logout -->
                 </div>
             </div>
         </div>
@@ -68,4 +101,3 @@
 
 </body>
 </html>
-
