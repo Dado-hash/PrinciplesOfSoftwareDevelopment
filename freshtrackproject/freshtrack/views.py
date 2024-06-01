@@ -1,8 +1,9 @@
 import time
-
+import json
+import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm
@@ -10,6 +11,7 @@ from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from .utility import food_categories, findObjectPantry, get_notifications_for_user
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -329,4 +331,42 @@ def notifications_view(request):
     })
 
 
+@login_required
+@csrf_exempt
+def add_product_barcode(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        barcode = data.get('barcode')
+        print('sono nella add product barcode')
 
+        # Ricerca del prodotto tramite API esterna
+        response = requests.get(f'https://world.openfoodfacts.org/api/v0/product/{barcode}.json')
+        if response.status_code == 200:
+            product_data = response.json()
+
+            if product_data.get('status') == 1:
+                product_info = product_data.get('product')
+                user = request.user  # Ottieni l'utente autenticato
+                product = Product.objects.create(
+                    user=user,
+                    name=product_info.get('product_name', f'Product with barcode {barcode}'),
+                    quantity=1,
+                    unit_of_measure='u',
+                    status='New',
+                    category=product_info.get('categories', ''),
+                    notes=product_info.get('ingredients_text', ''),
+                    storage_location='',
+                    always_in_stock=False,
+                    expiration_date=None
+                )
+                return JsonResponse({'status': 'success', 'redirect_url': '/home/'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'API request failed'}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+@login_required
+def scanner(request):
+    return render(request, 'scanner.html')
