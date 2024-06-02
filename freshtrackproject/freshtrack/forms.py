@@ -50,3 +50,5 @@ class EditProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'expiration_date', 'category', 'storage_location', 'status', 'quantity', 'unit_of_measure', 'always_in_stock', 'notes']
 
+class UploadReceiptForm(forms.Form):
+    receipt_image = forms.ImageField()

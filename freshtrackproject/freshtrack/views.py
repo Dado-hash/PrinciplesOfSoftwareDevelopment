@@ -3,16 +3,17 @@ import json
 import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.dateparse import parse_date
-from .forms import EditProductForm, RegisterForm, ShoppingListForm
+from .forms import EditProductForm, RegisterForm, ShoppingListForm, UploadReceiptForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from .utility import food_categories, findObjectPantry, get_notifications_for_user
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-
+from .utility import extract_products_from_receipt
+from django.core.files.storage import FileSystemStorage
 
 
 def index(request):
@@ -368,3 +369,32 @@ def add_product_barcode(request):
 @login_required
 def scanner(request):
     return render(request, 'scanner.html')
+
+@login_required
+def upload_receipt(request):
+    if request.method == 'POST':
+        form = UploadReceiptForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Salva l'immagine caricata
+            receipt_image = form.cleaned_data['receipt_image']
+            fs = FileSystemStorage()
+            filename = fs.save(receipt_image.name, receipt_image)
+            uploaded_file_url = fs.url(filename)
+
+            # Estrai i prodotti dall'immagine dello scontrino
+            products = extract_products_from_receipt(fs.path(filename))
+            # Aggiungi i prodotti alla dispensa
+            for product_name in products:
+                Product.objects.create(
+                    user=request.user,
+                    name=product_name,
+                    quantity=1,
+                    unit_of_measure='u',
+                    status='New',
+                    category='',  # Puoi migliorare questa parte per assegnare categorie automaticamente
+                    storage_location=''
+                )
+            return HttpResponseRedirect('/home/')
+    else:
+        form = UploadReceiptForm()
+    return render(request, 'upload_receipt.html', {'form': form})
