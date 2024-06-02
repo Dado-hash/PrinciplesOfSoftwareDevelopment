@@ -58,7 +58,6 @@ def about(request):
 
 @login_required
 def home(request):
-    # Qui inserisci il codice per renderizzare la home
     pantry_items = Product.objects.filter(user=request.user)
     shopping_items = ShoppingList.objects.filter(user=request.user)
     return render(request, 'home.html', {'pantry_items': pantry_items, 'shopping_items': shopping_items})
@@ -337,7 +336,6 @@ def add_product_barcode(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         barcode = data.get('barcode')
-        print('sono nella add product barcode')
 
         # Ricerca del prodotto tramite API esterna
         response = requests.get(f'https://world.openfoodfacts.org/api/v0/product/{barcode}.json')
