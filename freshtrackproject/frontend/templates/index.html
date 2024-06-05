@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,6 +12,8 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
         <!-- Integra QuaggaJS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+        <link rel="icon" href="{% static 'admin/img/icon.png' %}" type="image/png">
+        <link rel="shortcut icon" href="{% static 'admin/img/icon.png' %}" type="image/png">  
     </head>
 <body class="flex flex-col min-h-screen bg-gray-100"> <!-- Applica flex-col al body per un layout a colonna -->
     <!-- Navbar -->
