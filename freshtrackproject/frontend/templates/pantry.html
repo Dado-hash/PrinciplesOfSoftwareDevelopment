@@ -49,11 +49,11 @@
             <!-- Cicla attraverso i prodotti nella dispensa -->
             {% for item in pantry_items %}
                 <div class="bg-white rounded-lg shadow-md p-4">
-                    <div class="flex justify-between items-center mb-2">
+                    <div class="flex justify-between items-start mb-2"> <!-- Usa items-start per allineare in alto -->
                         <h3 class="text-lg font-semibold">{{ item.name }}</h3>
                         <form action="{% url 'remove_from_pantry_page' item.id %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="bg-red-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-red-500 transition duration-300 ml-4 block md:inline-block mb-2 w-16 text-center flex justify-center items-center">Delete</button>
+                            <button type="submit" class="bg-red-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-red-500 transition duration-300 w-18 text-center self-start">Remove</button>
                         </form>
                     </div>
                     <p>Quantity: {{ item.quantity }} {% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}</p>
