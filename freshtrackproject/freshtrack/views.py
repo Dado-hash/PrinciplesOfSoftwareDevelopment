@@ -102,16 +102,17 @@ def add_to_pantry(request):
         always_in_stock = request.POST.get('always_in_stock')
         storage_location = request.POST.get('storage_location')
 
-        # Verifica se expiration_date_str non è una stringa vuota
-        if expiration_date_str:
-            
-            if expiration_date is None:
-                # Se la data non è stata parsata correttamente, restituisci un messaggio di errore
-                return HttpResponse("La data di scadenza non è nel formato corretto. Assicurati di inserire una data nel formato YYYY-MM-DD.")
+        # Cerca un prodotto esistente con lo stesso nome, unità di misura e data di scadenza
+        product = Product.objects.filter(
+            user=request.user,
+            name=product_name.capitalize(),
+            expiration_date=expiration_date,
+            unit_of_measure=unit_of_measure,
+            storage_location=storage_location
+        ).first()
 
-        # Se un oggetto è già presente, non se ne crea uno nuovo ma si aggiunge a quello esistente
-        product = findObjectPantry(product_name)
-        if product!=None and product.expiration_date==expiration_date and product.unit_of_measure==unit_of_measure and product.storage_location==storage_location:
+        if product:
+            # Se il prodotto esiste, aggiorna la quantità
             product.quantity += int(quantity)
             product.save()
         else:
@@ -124,12 +125,12 @@ def add_to_pantry(request):
                 unit_of_measure=unit_of_measure,
                 always_in_stock=always_in_stock,
                 status="New",
-                category= food_categories(product_name),
+                category=food_categories(product_name),
                 storage_location=storage_location
-        )
+            )
 
         # Reindirizza l'utente alla home o alla pagina della dispensa
-        return redirect('home')  # Puoi cambiare 'home' con la URL della pagina della dispensa se necessario
+        return redirect('home')
 
     return render(request, 'home.html')  # Renderizza il template del form per aggiungere
 
@@ -175,18 +176,31 @@ def remove_and_add_to_pantry(request):
         # Recupera gli elementi contrassegnati come acquistati dalla lista della spesa
         purchased_items = ShoppingList.objects.filter(user=request.user, purchased=True)
         for item in purchased_items:
-            # Aggiungi ogni elemento alla dispensa come oggetto Product
-            Product.objects.create(
+            # Cerca un prodotto esistente con lo stesso nome, unità di misura e posizione di archiviazione
+            product = Product.objects.filter(
                 user=request.user,
-                name=item.product_name,
-                quantity=item.quantity,
+                name=item.product_name.capitalize(),
                 unit_of_measure=item.unit_of_measure,
-                expiration_date=None,
-                always_in_stock=item.always_in_stock,
-                status='New',
-                category= food_categories(item.product_name),
                 storage_location='Pantry'
-            )
+            ).first()
+
+            if product:
+                # Se il prodotto esiste, aggiorna la quantità
+                product.quantity += item.quantity
+                product.save()
+            else:
+                # Aggiungi ogni elemento alla dispensa come oggetto Product
+                Product.objects.create(
+                    user=request.user,
+                    name=item.product_name.capitalize(),
+                    quantity=item.quantity,
+                    unit_of_measure=item.unit_of_measure,
+                    expiration_date=None,
+                    always_in_stock=item.always_in_stock,
+                    status='New',
+                    category=food_categories(item.product_name),
+                    storage_location='Pantry'
+                )
         # Rimuovi gli elementi contrassegnati come acquistati dalla lista della spesa
         purchased_items.delete()
     return redirect('home')
