@@ -34,7 +34,7 @@
     </div>
 {% endif %}
 
-<div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8 mt-8 mb-8">
+<div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6 mt-28">
     <h1 class="text-2xl font-bold mb-4">Edit product</h1>
     <form action="{% url 'update_product' item.id %}" method="post">
         {% csrf_token %}
@@ -56,19 +56,21 @@
             <label for="Food_Category" class="block text-sm font-medium text-gray-700">Food Category</label>
             <input type="text" name="category" value="{% if item.category %}{{ item.category }}{% else %}{% endif %}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
         </div>
-        <div class="mb-4">
-            <label for="storage_location" class="block text-sm font-medium text-gray-700">Storage Location</label>
-            <select name="storage_location" class="mr-2 p-2 border rounded-lg">
-                <option value="Freezer">Freezer</option>
-                <option value="Larder">Larder</option>
-            </select> 
-        </div>
-        <div class="mb-4">
-            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-            <select name="status" id="status" class="mr-2 p-2 border rounded-lg">
-                <option value="New" {% if item.status == 'New' %}selected{% endif %}>New</option>
-                <option value="Opened" {% if item.status == 'Opened' %}selected{% endif %}>Opened</option>
-            </select>
+        <div class="flex space-x-4 mb-4">
+            <div class="w-1/2">
+                <label for="storage_location" class="block text-sm font-medium text-gray-700">Storage Location</label>
+                <select name="storage_location" class="mr-2 p-2 border rounded-lg w-full">
+                    <option value="Freezer">Freezer</option>
+                    <option value="Larder">Larder</option>
+                </select> 
+            </div>
+            <div class="w-1/2">
+                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                <select name="status" id="status" class="mr-2 p-2 border rounded-lg w-full">
+                    <option value="New" {% if item.status == 'New' %}selected{% endif %}>New</option>
+                    <option value="Opened" {% if item.status == 'Opened' %}selected{% endif %}>Opened</option>
+                </select>
+            </div>
         </div>
         <div class="mb-4">
             <label for="quantity" class="block text-sm font-medium text-gray-700" min="0">Quantity</label>

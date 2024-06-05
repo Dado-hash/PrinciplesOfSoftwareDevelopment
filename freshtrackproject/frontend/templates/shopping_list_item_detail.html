@@ -34,7 +34,7 @@
 </div>
 {% endif %}
 
-<div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-8 mt-8 mb-96">
+<div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6 mt-28">
     <h1 class="text-2xl font-bold mb-4">Edit product in shopping list</h1>
     <form action="{% url 'edit_shopping_list_item' item.id %}" method="post">
         {% csrf_token %}
