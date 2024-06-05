@@ -408,6 +408,10 @@ def upload_receipt(request):
                     category='',
                     storage_location='Pantry'
                 )
+            # Elimina il file dopo l'elaborazione
+            if fs.exists(filename):
+                fs.delete(filename)
+            
             return HttpResponseRedirect('/home/')
     else:
         form = UploadReceiptForm()
