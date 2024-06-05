@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.dateparse import parse_date
+
+from freshtrack.tasks import check_expirations
 from .forms import EditProductForm, RegisterForm, ShoppingListForm, UploadReceiptForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
@@ -17,6 +19,7 @@ from django.core.files.storage import FileSystemStorage
 
 
 def index(request):
+    check_expirations()
     return render(request, 'index.html')
 
 
@@ -59,6 +62,7 @@ def about(request):
 
 @login_required
 def home(request):
+    check_expirations()
     pantry_items = Product.objects.filter(user=request.user)
     shopping_items = ShoppingList.objects.filter(user=request.user)
     return render(request, 'home.html', {'pantry_items': pantry_items, 'shopping_items': shopping_items})

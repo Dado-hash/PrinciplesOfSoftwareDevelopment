@@ -1,9 +1,12 @@
-from django_q.tasks import async_task
 from django.utils import timezone
 from datetime import timedelta
 from .models import Product, Notification
+import logging
+
+logger = logging.getLogger(__name__)
 
 def check_expirations():
+    logger.debug('Starting check_expirations task.')
     today = timezone.now().date()
     expiring_soon = today + timedelta(days=5)
 

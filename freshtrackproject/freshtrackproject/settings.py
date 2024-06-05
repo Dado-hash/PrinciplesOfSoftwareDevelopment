@@ -152,8 +152,36 @@ Q_CLUSTER = {
     'workers': 4,
     'recycle': 500,
     'timeout': 60,
-    'retry': 60,
+    'retry': 300,
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default'
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django_q.log',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django_q': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'freshtrack.tasks': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
