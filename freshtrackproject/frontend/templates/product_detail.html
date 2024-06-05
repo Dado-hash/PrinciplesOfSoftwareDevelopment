@@ -24,22 +24,19 @@
     }
 </style>
 
-{% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <div class="success">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
 <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6 mt-28">
     <h1 class="text-2xl font-bold mb-4">Edit product</h1>
     <form action="{% url 'update_product' item.id %}" method="post">
         {% csrf_token %}
-        <div class="mb-4">
-            <input type="text" name="name" value="{{ item.name }}" placeholder="Product name" class="mr-2 p-2 border rounded-lg"> 
+        <div class="flex space-x-4 mb-4">
+            <div>
+                <label for="Product name" class="block text-sm font-medium text-gray-700">Product name</label>
+                <input type="text" name="name" value="{{ item.name }}" placeholder="Product name" class="mr-2 p-2 border rounded-lg"> 
+            </div>
+            <div>
+                <label for="Food_Category" class="block text-sm font-medium text-gray-700">Food Category</label>
+                <input type="text" name="category" value="{% if item.category %}{{ item.category }}{% else %}{% endif %}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
+            </div>
             {% if form.name.errors %}
             <div class="text-red-500 text-sm mt-1">
                 {% for error in form.name.errors %}
@@ -51,10 +48,6 @@
         <div class="mb-4">
             <label for="expiration_date" class="block text-sm font-medium text-gray-700">Expiration Date</label>
             <input type="date" name="expiration_date" id="expiration_date" value="{{ item.expiration_date|date:'Y-m-d' }}" class="mt-1 p-2 border rounded-lg">
-        </div>
-        <div class="mb-4">
-            <label for="Food_Category" class="block text-sm font-medium text-gray-700">Food Category</label>
-            <input type="text" name="category" value="{% if item.category %}{{ item.category }}{% else %}{% endif %}" placeholder="Category" class="mr-2 p-2 border rounded-lg">
         </div>
         <div class="flex space-x-4 mb-4">
             <div class="w-1/2">
@@ -96,6 +89,15 @@
             <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
             <textarea name="notes" placeholder="Notes" class="p-2 border rounded-lg w-full">{{ item.notes }}</textarea>
         </div>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <input type="submit" value="Save edits" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
     </form>
 </div>
