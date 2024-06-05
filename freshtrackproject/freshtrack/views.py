@@ -9,7 +9,7 @@ from django.utils.dateparse import parse_date
 from .forms import EditProductForm, RegisterForm, ShoppingListForm, UploadReceiptForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
-from .utility import food_categories, findObjectPantry, get_notifications_for_user
+from .utility import get_notifications_for_user
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .utility import extract_products_from_receipt
@@ -125,7 +125,7 @@ def add_to_pantry(request):
                 unit_of_measure=unit_of_measure,
                 always_in_stock=always_in_stock,
                 status="New",
-                category=food_categories(product_name),
+                category='',
                 storage_location=storage_location
             )
 
@@ -198,7 +198,7 @@ def remove_and_add_to_pantry(request):
                     expiration_date=None,
                     always_in_stock=item.always_in_stock,
                     status='New',
-                    category=food_categories(item.product_name),
+                    category='',
                     storage_location='Pantry'
                 )
         # Rimuovi gli elementi contrassegnati come acquistati dalla lista della spesa
