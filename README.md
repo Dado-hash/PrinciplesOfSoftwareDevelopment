@@ -62,6 +62,11 @@
    python manage.py runserver
    ```
 
+7. **Run the scheduler for the notifications:**
+   ```bash
+   python manage.py qcluster
+   ```
+
 ## Usage
 
 1. **Access the application:**
