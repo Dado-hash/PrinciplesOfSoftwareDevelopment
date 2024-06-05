@@ -185,7 +185,7 @@ def remove_and_add_to_pantry(request):
                 always_in_stock=item.always_in_stock,
                 status='New',
                 category= food_categories(item.product_name),
-                storage_location='Larder'
+                storage_location='Pantry'
             )
         # Rimuovi gli elementi contrassegnati come acquistati dalla lista della spesa
         purchased_items.delete()
@@ -304,7 +304,7 @@ def pantry(request):
     categories = pantry_items.values_list('category', flat=True).distinct()
 
     # Recupera le posizioni di archiviazione uniche dei prodotti nella dispensa dell'utente
-    storage_locations = pantry_items.values_list('storage_location', flat=True).distinct()
+    storage_locations = ["Pantry", "Fridge", "Freezer", "Spices", "Beverages", "Other"]
 
     # Applica i filtri se sono presenti nei parametri GET
     category_filter = request.GET.get('category')
@@ -354,7 +354,7 @@ def add_product_barcode(request):
                     status='New',
                     category=product_info.get('categories', ''),
                     notes=product_info.get('ingredients_text', ''),
-                    storage_location='',
+                    storage_location='Pantry',
                     always_in_stock=False,
                     expiration_date=None
                 )
@@ -391,8 +391,8 @@ def upload_receipt(request):
                     quantity=1,
                     unit_of_measure='u',
                     status='New',
-                    category='',  # Puoi migliorare questa parte per assegnare categorie automaticamente
-                    storage_location=''
+                    category='',
+                    storage_location='Pantry'
                 )
             return HttpResponseRedirect('/home/')
     else:
