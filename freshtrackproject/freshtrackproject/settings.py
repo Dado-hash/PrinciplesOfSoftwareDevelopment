@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'freshtrack'
+    'freshtrack',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,14 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Esempio per Redis
 
 # Opzionale: Configurazione del risultato del backend per Celery
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Esempio per Redis
+
+Q_CLUSTER = {
+    'name': 'DjangoQ',
+    'workers': 4,
+    'recycle': 500,
+    'timeout': 60,
+    'retry': 60,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
