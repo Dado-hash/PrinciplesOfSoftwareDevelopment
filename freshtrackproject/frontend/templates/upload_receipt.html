@@ -3,10 +3,21 @@
 {% block title %}FreshTrack{% endblock %}
 
 {% block content %}
-  <h2>Upload Receipt</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload</button>
-  </form>
+    <div class="flex-1 px-4 py-8 mx-auto mt-20">
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4">Upload Receipt</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex flex-wrap items-center mb-4">
+                    <div class="mr-2 mb-2 sm:mb-4 p-2 w-full md:w-auto">
+                        {{ form.receipt_image.label_tag }}
+                        {{ form.receipt_image }}
+                    </div>
+                    <button type="submit" class="bg-green-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-500 cursor-pointer transition duration-300 w-full sm:mb-4 md:w-auto">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
