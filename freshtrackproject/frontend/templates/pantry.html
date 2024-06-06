@@ -35,8 +35,8 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="w-full flex items-center justify-center md:w-1/3 md:justify-end">
-                    <button type="submit" class="bg-blue-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-blue-500 transition duration-300 ml-4 block md:inline-block mb-2 w-40 text-center flex justify-center items-center">Apply Filters</button>
+                <div class="w-full flex items-center justify-center md:w-1/3">
+                    <button type="submit" class="bg-blue-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-blue-500 transition duration-300 block md:inline-block w-40 text-center flex justify-center items-center">Apply Filters</button>
                 </div>
             </div>
         </form>
@@ -48,7 +48,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <!-- Cicla attraverso i prodotti nella dispensa -->
             {% for item in pantry_items %}
-                <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="bg-white rounded-lg shadow-md p-4 flex flex-col">
                     <div class="flex justify-between items-start mb-2"> <!-- Usa items-start per allineare in alto -->
                         <h3 class="text-lg font-semibold">{{ item.name }}</h3>
                         <form action="{% url 'remove_from_pantry_page' item.id %}" method="post">
@@ -62,7 +62,7 @@
                     <p>Expiration Date: {{ item.expiration_date }}</p>
                     <p>Status: {{ item.status }}</p>
                     <!-- Link alla pagina dettaglio del prodotto -->
-                    <a href="{% url 'pantry_product_detail' item.id %}" class="text-blue-500 hover:underline">View Details</a>
+                    <a href="{% url 'pantry_product_detail' item.id %}" class="text-blue-500 hover:underline mt-auto">View Details</a>
                 </div>
             {% endfor %}
         </div>

@@ -114,6 +114,9 @@
             <a href="/home" class="text-gray-600 hover:text-gray-800 text-center py-2">Home</a>
             <a href="/pantry" class="text-gray-600 hover:text-gray-800 text-center py-2">Pantry</a>
             <a href="/about" class="text-gray-600 hover:text-gray-800 text-center py-2">About</a>
+            <button id="menu-close" class="text-gray-600 hover:text-gray-800 text-center py-2 mt-4 focus:outline-none">
+                Close
+            </button>
         </div>
     </nav>
 
@@ -132,6 +135,11 @@
         document.getElementById('menu-toggle').addEventListener('click', function() {
             var menu = document.getElementById('menu');
             menu.classList.toggle('show');
+        });
+
+        document.getElementById('menu-close').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            menu.classList.remove('show');
         });
     </script>
 </body>

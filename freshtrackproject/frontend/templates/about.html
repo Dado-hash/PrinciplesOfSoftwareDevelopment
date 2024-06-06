@@ -65,6 +65,48 @@
         .notifications-icon.has-notifications .badge {
             display: inline-block; /* Mostra il badge solo se ci sono notifiche */
         }
+
+        .dropdown-menu {
+            display: none;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 50;
+            padding-top: 80px; /* Altezza della navbar */
+        }
+
+        .dropdown-menu.show {
+            display: flex;
+        }
+
+        .developer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .developer-image {
+            width: 100%; /* Usa il 100% per far sì che l'immagine sia responsive */
+            max-width: 200px; /* Imposta una larghezza massima */
+            height: auto; /* Mantiene le proporzioni dell'immagine */
+            object-fit: cover; /* Mantiene le proporzioni delle immagini e le ritaglia per adattarle al contenitore */
+            border-radius: 50%; /* Rende l'immagine rotonda */
+            margin-bottom: 8px;
+        }
+
+        .developer-info {
+            text-align: center; /* Centra il testo */
+        }
+
+        @media (min-width: 640px) {
+            .developer-image {
+                max-width: 390px; /* Larghezza per schermi più grandi */
+            }
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-100">
@@ -73,76 +115,73 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <h1 class="text-xl font-bold text-gray-800">FreshTrack</h1>
-                <div class="flex items-center"> <!-- Modifica il container per contenere entrambi i link -->
+                <div class="flex items-center">
+                    <div class="hidden md:flex space-x-4">
+                        {% if user.is_authenticated %}
+                            <a href="/home" class="text-gray-600 hover:text-gray-800">Home</a>
+                        {% else %}
+                            <a href="/" class="text-gray-600 hover:text-gray-800">Home</a>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <a href="/pantry" class="text-gray-600 hover:text-gray-800">Pantry</a>
+                        {% endif %}
+                        <a href="/about" class="text-gray-600 hover:text-gray-800">About</a>
+                    </div>
+                    <div class="md:hidden">
+                        <button id="menu-toggle" class="text-gray-600 hover:text-gray-800 focus:outline-none">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
                     {% if user.is_authenticated %}
-                        <a href="/home" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
-                    {% else %}
-                        <a href="/" class="text-gray-600 hover:text-gray-800 mr-4">Home</a>
-                    {% endif %}
-                    {% if user.is_authenticated %}
-                        <a href="/pantry" class="text-gray-600 hover:text-gray-800 mr-4">Pantry</a>
-                    {% endif %}
-                        <a href="/about" class="text-gray-600 hover:text-gray-800 mr-4">About</a>
-                    {% if user.is_authenticated %}
-                        <a href="/notifications" class="text-gray-600 hover:text-gray-800 mr-4 notifications-icon {% if notifications_count > 0 %}has-notifications{% endif %}">
+                        <a href="/notifications" class="text-gray-600 hover:text-gray-800 ml-4 notifications-icon {% if notifications_count > 0 %}has-notifications{% endif %}">
                             <i class="fas fa-bell"></i>
                             {% if notifications_count > 0 %}
                                 <span class="badge">{{ notifications_count }}</span>
                             {% endif %}
                         </a>
-                        <!-- Mostra il form per il logout solo se l'utente è autenticato -->
-                        <form action="{% url 'logout' %}" method="post" class="w-full bg-red-400 py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">
+                        <form action="{% url 'logout' %}" method="post" class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300 ml-4 block md:inline-block mb-2 w-36 text-center flex justify-center items-center">
                             {% csrf_token %}
-                            <button type="submit" class="text-white hover:bg-gray-200">Logout</button>
+                            <button type="submit" class="text-white">Logout</button>
                         </form>
                     {% else %}
-                        <!-- Mostra il tasto "Get Started" se l'utente non è loggato -->
                         <a href="{% url 'register' %}" class="bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Get Started</a>
                     {% endif %}
                 </div>
             </div>
         </div>
+        <div id="menu" class="dropdown-menu">
+            {% if user.is_authenticated %}
+                <a href="/home" class="text-gray-600 hover:text-gray-800 text-center py-2">Home</a>
+                <a href="/pantry" class="text-gray-600 hover:text-gray-800 text-center py-2">Pantry</a>
+            {% else %}
+                <a href="/" class="text-gray-600 hover:text-gray-800 text-center py-2">Home</a>
+            {% endif %}
+            <a href="/about" class="text-gray-600 hover:text-gray-800 text-center py-2">About</a>
+            <button id="menu-close" class="text-gray-600 hover:text-gray-800 text-center py-2 mt-4 focus:outline-none">
+                Close
+            </button>
+        </div>
     </nav>
     
     <!-- Contenuto della pagina -->
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-4">About Us</h1>
-        <div class="grid grid-cols-3 gap-4">
-            <style>
-                .developer {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-        
-                .developer-image {
-                    width: 390px; /* Imposta la larghezza desiderata */
-                    height: 390px; /* Imposta l'altezza desiderata */
-                    object-fit: cover; /* Mantiene le proporzioni delle immagini e le ritaglia per adattarle al contenitore */
-                    margin-bottom: 8px;
-                }
-        
-                .developer-info {
-                    text-align: center; /* Centra il testo */
-                }
-            </style>
-                <!-- Sviluppatore 1 -->
-                <div class="developer text-center">
-                    <img src="{% static 'admin/img/Davide.jpg' %}" alt="Davide Galbiati" class="developer-image rounded-image mb-2">
-                    <div class="developer-info">
-                        <h2 class="font-semibold">Developer 1</h2>
-                        <p>Web Developer</p>
-                    </div>
+        <h1 class="text-2xl font-bold mb-4 text-center">About Us</h1>
+        <div class="flex flex-wrap justify-center gap-12 mt-20">
+            <!-- Sviluppatore 1 -->
+            <div class="developer text-center">
+                <img src="{% static 'admin/img/Davide.jpg' %}" alt="Davide Galbiati" class="developer-image rounded-image mb-2">
+                <div class="developer-info">
+                    <h2 class="font-semibold">Developer 1</h2>
+                    <p>Web Developer</p>
                 </div>
-                <!-- Sviluppatore 2 -->
-                <div class="developer text-center">
-                    <img src="{% static 'admin/img/Giuseppe.jpg' %}" alt="Giuseppe Silvestro" class="developer-image rounded-image mb-2">
-                    <div class="developer-info">
-                        <h2 class="font-semibold">Developer 2</h2>
-                        <p>Software Engineer</p>
-                    </div>
+            </div>
+            <!-- Sviluppatore 2 -->
+            <div class="developer text-center">
+                <img src="{% static 'admin/img/Giuseppe.jpg' %}" alt="Giuseppe Silvestro" class="developer-image rounded-image mb-2">
+                <div class="developer-info">
+                    <h2 class="font-semibold">Developer 2</h2>
+                    <p>Software Engineer</p>
                 </div>
-                <!-- Aggiungi più sviluppatori se necessario -->
             </div>
             <!-- Aggiungi più sviluppatori se necessario -->
         </div>
@@ -154,5 +193,17 @@
             <p class="text-center">&copy; 2024 FreshTrack. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            menu.classList.toggle('show');
+        });
+
+        document.getElementById('menu-close').addEventListener('click', function() {
+            var menu = document.getElementById('menu');
+            menu.classList.remove('show');
+        });
+    </script>
 </body>
 </html>
