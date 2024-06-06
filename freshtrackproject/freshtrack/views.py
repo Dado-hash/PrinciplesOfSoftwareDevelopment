@@ -70,7 +70,7 @@ def home(request):
 @login_required
 def logout(request):
     logout(request)
-    return redirect('')
+    return redirect('login')
 
 
 @login_required
