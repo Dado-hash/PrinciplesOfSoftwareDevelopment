@@ -61,23 +61,28 @@
             </form>
         </div>
 
-        <div class="flex-1 px-4 py-8 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="flex-1 px-4 py-8 mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 max-w-4xl">
             <div class="mb-8">
                 <h2 class="text-xl font-bold mb-4">Pantry</h2>
                 <ul class="space-y-4">
                     {% for item in pantry_items %}
-                        <li class="flex items-center justify-between">
-                            <div>
-                                <a href="{% url 'pantry_product_detail' item.id %}" class="hover:underline">{{ item.name }}</a> - {{ item.quantity }}{% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}
+                        <li class="bg-white rounded-lg shadow-md p-4 flex flex-col items-start">
+                            <div class="flex justify-between w-full items-center mb-2">
+                                <div class="text-center">
+                                    <a href="{% url 'pantry_product_detail' item.id %}" class="hover:underline">{{ item.name }}</a>
+                                </div>
+                                <div class="text-center">
+                                    <span>{{ item.quantity }}{% if item.unit_of_measure != 'u' %} {{ item.unit_of_measure }}{% endif %}</span>
+                                </div>
                             </div>
-                            <div class="flex space-x-2 items-center">
+                            <div class="flex justify-center w-full space-x-2 mt-2">
                                 <form action="{% url 'remove_from_pantry' item.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="bg-red-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-red-500 transition duration-300 ml-4 block md:inline-block mb-2 w-20 text-center flex justify-center items-center">Remove</button>
+                                    <button type="submit" class="bg-red-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Remove</button>
                                 </form>
                                 <form action="{% url 'move_to_shopping_list' item.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="bg-blue-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-blue-500 transition duration-300 ml-4 block md:inline-block mb-2 w-20 text-center flex justify-center items-center">Shop</button>
+                                    <button type="submit" class="bg-blue-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-blue-500 transition duration-300">Shop</button>
                                 </form>
                             </div>
                         </li>
@@ -89,37 +94,41 @@
                 <h2 class="text-xl font-bold mb-4">Shopping list</h2>
                 <ul class="space-y-4">
                     {% for item in shopping_items %}
-                        <li class="flex items-center justify-between">
-                            <div>
-                                {% if item.purchased %}
-                                    <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a></del> - {{ item.quantity }}{% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}
-                                {% else %}
-                                    <a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a> - {{ item.quantity }}{% if item.unit_of_measure != 'u' %}{{ item.unit_of_measure }}{% endif %}
-                                {% endif %}
+                        <li class="bg-white rounded-lg shadow-md p-4 flex flex-col items-start">
+                            <div class="flex justify-between w-full items-center mb-2">
+                                <div class="text-center">
+                                    {% if item.purchased %}
+                                        <del><a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a></del>
+                                    {% else %}
+                                        <a href="{% url 'shopping_list_item_detail' item.id %}" class="hover:underline">{{ item.product_name }}</a>
+                                    {% endif %}
+                                </div>
+                                <div class="text-center">
+                                    <span>{{ item.quantity }}{% if item.unit_of_measure != 'u' %} {{ item.unit_of_measure }}{% endif %}</span>
+                                </div>
                             </div>
-                            <div class="ml-8 flex space-x-2">
+                            <div class="flex justify-center w-full space-x-2 mt-2">
                                 <form action="{% url 'remove_from_shopping_list' item.id %}" method="post">
                                     {% csrf_token %}
-                                    <button type="submit" class="bg-red-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-red-500 transition duration-300 ml-4 block md:inline-block mb-2 w-20 text-center flex justify-center items-center">Remove</button>
+                                    <button type="submit" class="bg-red-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Remove</button>
                                 </form>
                                 {% if not item.purchased %}
                                     <form action="{% url 'mark_as_purchased' item.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit" class="bg-green-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-green-500 transition duration-300 ml-4 block md:inline-block mb-2 w-28 text-center flex justify-center items-center">Purchased</button>
+                                        <button type="submit" class="bg-green-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-green-500 transition duration-300">Purchased</button>
                                     </form>
-                                {% endif %}
-                                {% if item.purchased %}
+                                {% else %}
                                     <form action="{% url 'mark_as_not_purchased' item.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit" class="bg-yellow-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-yellow-500 transition duration-300 ml-4 block md:inline-block mb-2 w-32 text-center flex justify-center items-center">Not Purchased</button>
+                                        <button type="submit" class="bg-yellow-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-yellow-500 transition duration-300">Not Purchased</button>
                                     </form>
                                 {% endif %}
                             </div>
                         </li>
                     {% endfor %}
-                    <form action="{% url 'remove_and_add_to_pantry' %}" method="post" class="mb-4">
+                    <form action="{% url 'remove_and_add_to_pantry' %}" method="post" class="mt-4">
                         {% csrf_token %}
-                        <button type="submit" class="bg-blue-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-500 transition duration-300 block md:inline-block mb-2 w-full text-center flex justify-center items-center">Remove bought products and add to pantry</button>
+                        <button type="submit" class="bg-blue-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-500 transition duration-300 w-full text-center flex justify-center items-center">Remove bought products and add to pantry</button>
                     </form>
                 </ul>
             </div>
