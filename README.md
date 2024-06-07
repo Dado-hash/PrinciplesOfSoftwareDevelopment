@@ -3,12 +3,12 @@
 
 ## Description
 
-**FreshTrackProject** is a web application for managing users' pantry and shopping lists. It allows you to keep track of pantry items, create and manage shopping lists, and monitor expiration dates of food items.
+**FreshTrackProject** is a web application for managing users' pantry and shopping list. It allows you to keep track of pantry and shopping list items, and monitor expiration dates of food items.
 
 ## Features
 
 - **Pantry Management**: Add, edit, and remove items in the pantry.
-- **Shopping Lists**: Create and manage custom shopping lists.
+- **Shopping Lists**: Manage a shopping list.
 - **Expiration Notifications**: Receive alerts for items nearing expiration.
 - **Responsive Interface**: A modern, responsive user interface built with Tailwind CSS.
 
