@@ -1,0 +1,52 @@
+{% extends 'commonNAVaccount.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row px-4 py-8 mx-auto mt-20 items-center lg:items-start lg:space-x-8">  <!-- Modificato per la responsività -->
+    <div class="w-full lg:w-1/2 flex items-center lg:items-start">  <!-- Modificato per la responsività -->
+        <div class="mb-8 w-full">
+            <h2 class="text-xl font-bold mb-4">User Profile</h2>
+            <form action="{% url 'update_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex flex-wrap -mx-2 mb-4">
+                    <div class="w-full lg:w-1/2 px-2 mb-4">
+                        <label class="block">First Name:</label>
+                        <input type="text" name="first_name" placeholder="First name" value="{{ profile.first_name }}" required class="p-2 border rounded-lg w-full">
+                    </div>
+                    <div class="w-full lg:w-1/2 px-2 mb-4">
+                        <label class="block">Last Name:</label>
+                        <input type="text" name="last_name" placeholder="Last name" value="{{ profile.last_name }}" required class="p-2 border rounded-lg w-full">
+                    </div>
+                    <div class="w-full lg:w-1/2 px-2 mb-4">
+                        <label class="block">Email:</label>
+                        <input type="email" name="email" placeholder="Email" value="{{ user.email }}" readonly class="p-2 border rounded-lg w-full bg-gray-200 cursor-not-allowed">
+                    </div>
+                    <div class="w-full lg:w-1/2 px-2 mb-4">
+                        <label class="block">Username:</label>
+                        <input type="text" name="username" placeholder="Username" value="{{ user.username }}" readonly class="p-2 border rounded-lg w-full bg-gray-200 cursor-not-allowed">
+                    </div>
+                    <div class="w-full px-2 mb-4">
+                        <label class="block">Profile Picture:</label>
+                        <input type="file" name="profile_picture" accept="image/*" class="p-2 border rounded-lg w-full">
+                    </div>
+                    <div class="w-full px-2 mb-4">
+                        <input type="submit" value="Update Profile" class="bg-green-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-500 cursor-pointer transition duration-300 w-full">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Picture Display -->
+    <div class="w-full lg:w-1/2 flex justify-center lg:ml-8 items-center mt-8 lg:mt-0">  <!-- Modificato per la responsività -->
+        {% if user.profile.profile_picture %}
+            <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="w-1/2 h-1/2 rounded-full border-2 border-gray-300 object-cover">
+        {% else %}
+            <div class="w-1/2 h-1/2 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-400">
+                No Image
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

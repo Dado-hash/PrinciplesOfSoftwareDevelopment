@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.dateparse import parse_date
 
 from freshtrack.tasks import check_expirations
-from .forms import EditProductForm, RegisterForm, ShoppingListForm, UploadReceiptForm
+from .forms import EditProductForm, ProfileUpdateForm, RegisterForm, ShoppingListForm, UploadReceiptForm
 from .models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from .utility import get_notifications_for_user
@@ -59,6 +59,11 @@ def register(request):
 
 def about(request):
     return render(request, 'about.html')
+
+@login_required
+def profile(request):
+    profile = request.user.profile
+    return render(request, 'profile.html', {'profile': profile})
 
 @login_required
 def home(request):
@@ -420,3 +425,19 @@ def upload_receipt(request):
     else:
         form = UploadReceiptForm()
     return render(request, 'upload_receipt.html', {'form': form})
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('profile')
+    else:
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    return render(request, 'profile.html', {
+        'profile': request.user.profile,
+    })

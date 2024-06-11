@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from freshtrack.models import ShoppingList, Product
+from freshtrack.models import Profile, ShoppingList, Product
 
 
 class RegisterForm(UserCreationForm):
@@ -52,3 +52,8 @@ class EditProductForm(forms.ModelForm):
 
 class UploadReceiptForm(forms.Form):
     receipt_image = forms.ImageField()
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'profile_picture']
