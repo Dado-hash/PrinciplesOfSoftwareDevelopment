@@ -16,10 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from freshtrack.views import about, add_product_barcode, index, logout, mark_as_not_purchased, mark_as_purchased, pantry, profile, register, home, add_to_pantry, add_to_shopping_list, remove_and_add_to_pantry, remove_from_pantry, remove_from_pantry_page, remove_from_shopping_list, move_to_shopping_list, pantry_product_detail, scanner, shopping_list_item_detail, edit_shopping_list_item, update_product, notifications_view, update_profile, upload_receipt
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.contrib import admin
+from django.urls import path, include
+from freshtrack.views.general_views import index, about
+from freshtrack.views.authentication_views import login_user, register, logout
+from freshtrack.views.profile_views import profile, update_profile, home
+from freshtrack.views.pantry_views import (pantry, add_to_pantry, remove_from_pantry, pantry_product_detail,
+                                           update_product)
+from freshtrack.views.shopping_list_views import (add_to_shopping_list, remove_from_shopping_list, shopping_list_item_detail,
+                                                  edit_shopping_list_item, mark_as_purchased, mark_as_not_purchased,
+                                                  move_to_shopping_list, remove_and_add_to_pantry)
+from freshtrack.views.receipt_views import upload_receipt, add_product_barcode, scanner
+from freshtrack.views.general_views import notifications_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,7 +55,6 @@ urlpatterns = [
     path('edit_shopping_list_item/<int:item_id>/', edit_shopping_list_item, name='edit_shopping_list_item'),
     path('update_product/<int:item_id>/', update_product, name='update_product'),
     path('pantry/', pantry, name='pantry'),
-    path('remove_from_pantry_page/<int:product_id>/', remove_from_pantry_page, name='remove_from_pantry_page'),
     path('notifications/', notifications_view, name='notifications'),
     path('add_product_barcode/', add_product_barcode, name='add_product_barcode'),
     path('scanner', scanner, name='scanner'),
