@@ -22,23 +22,31 @@ def index(request):
     check_expirations()
     return render(request, 'index.html')
 
-
 def login_user(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        print(username)
-        print(password)
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+
+        if not username:
+            messages.error(request, 'Username cannot be empty.')
+            return render(request, 'registration/login.html')
+        
+        if not password:
+            messages.error(request, 'Password cannot be empty.')
+            return render(request, 'registration/login.html', {'username': username})
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             # Redirect to a success page.
             return redirect('home')
         else:
-            # Return an 'invalid login' error message.
-            return render(request, 'registration/login.html', {'error_message': 'Invalid login'})
+            # Invalid username or password
+            messages.error(request, 'Invalid login credentials.')
+            return render(request, 'registration/login.html', {'username': username})
     else:
         return render(request, 'registration/login.html')
+
 
 
 def register(request):
