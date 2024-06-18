@@ -140,3 +140,21 @@ def update_product(request, item_id):
     
     # Il form è invalido, passa il form compilato e gli errori al template
     return render(request, 'product_detail.html', {'form': form, 'item': item, 'errors': form.errors})
+
+@login_required
+def remove_from_pantry_page(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    if product.user == request.user:
+        # Se l'attributo always_in_stock è attivo, aggiungi l'oggetto alla lista della spesa
+        if product.always_in_stock:
+            shopping_item = ShoppingList.objects.create(
+                user=request.user,
+                product_name=product.name,
+                quantity=1,  # Puoi modificare la quantità in base alle tue esigenze
+                unit_of_measure=product.unit_of_measure,
+                always_in_stock=product.always_in_stock
+            )
+            shopping_item.save()
+        # Rimuovi l'oggetto dalla dispensa
+        product.delete()
+    return redirect('pantry')

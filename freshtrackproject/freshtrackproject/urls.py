@@ -25,7 +25,7 @@ from freshtrack.views.general_views import index, about
 from freshtrack.views.authentication_views import login_user, register, logout
 from freshtrack.views.profile_views import profile, update_profile, home
 from freshtrack.views.pantry_views import (pantry, add_to_pantry, remove_from_pantry, pantry_product_detail,
-                                           update_product)
+                                           update_product, remove_from_pantry_page)
 from freshtrack.views.shopping_list_views import (add_to_shopping_list, remove_from_shopping_list, shopping_list_item_detail,
                                                   edit_shopping_list_item, mark_as_purchased, mark_as_not_purchased,
                                                   move_to_shopping_list, remove_and_add_to_pantry)
@@ -40,7 +40,7 @@ urlpatterns = [
     path('', include("django.contrib.auth.urls")),
     path('about/', about, name='about'),
     path('register/', register, name='register'),
-    path('home/', home, name='home'),
+    path('home', home, name='home'),
     path('logout/', logout, name='logout'),
     path('add_to_pantry', add_to_pantry, name='add_to_pantry'),
     path('remove_from_pantry/<int:product_id>/', remove_from_pantry, name='remove_from_pantry'),
@@ -49,6 +49,7 @@ urlpatterns = [
     path('mark_as_not_purchased/<int:item_id>/', mark_as_not_purchased, name='mark_as_not_purchased'),
     path('remove_from_shopping_list/<int:item_id>/', remove_from_shopping_list, name='remove_from_shopping_list'),
     path('add_to_shopping_list', add_to_shopping_list, name='add_to_shopping_list'),
+    path('remove_from_pantry_page/<int:product_id>/', remove_from_pantry_page, name='remove_from_pantry_page'),
     path('move_to_shopping_list/<int:item_id>/', move_to_shopping_list, name='move_to_shopping_list'),
     path('pantry/pantry_product_detail/<int:item_id>/', pantry_product_detail, name='pantry_product_detail'),
     path('shopping_list_item_detail/<int:item_id>/', shopping_list_item_detail, name='shopping_list_item_detail'),

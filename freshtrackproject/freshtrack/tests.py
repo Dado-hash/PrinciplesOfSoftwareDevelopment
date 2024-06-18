@@ -8,6 +8,7 @@ import json
 from unittest.mock import patch
 
 class LoginViewTests(TestCase):
+    
     def setUp(self):
         self.client = Client()
         self.login_url = reverse('login')
@@ -18,17 +19,25 @@ class LoginViewTests(TestCase):
             'username': 'testuser',
             'password': 'testpassword'
         })
-        print(response['Location']) 
+        
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('home'))
+        
+        # Debug per stampare l'URL di reindirizzamento
+        print(f"Redirect Location: {response['Location']}")
+        
+        self.assertRedirects(response, reverse('home/'))
 
     def test_login_with_invalid_credentials(self):
         response = self.client.post(self.login_url, {
             'username': 'testuser',
             'password': 'wrongpassword'
         })
+        
+        # Verifica che la risposta abbia uno status code 200 (poiché non è stato eseguito il reindirizzamento)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Invalid login')
+        
+        # Verifica che nella risposta sia presente il messaggio 'Invalid login credentials.'
+        self.assertContains(response, 'Invalid login credentials.')
 
 class RegisterViewTests(TestCase):
     def setUp(self):
@@ -481,19 +490,22 @@ class LogoutViewTests(TestCase):
         # Log out dell'utente dopo il test
         self.client.logout()
 
-
 class RemoveFromPantryPageViewTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client.login(username='testuser', password='testpassword')
         self.product = Product.objects.create(user=self.user, name='Milk', quantity=2)
+        # Modifica: Aggiorna l'URL in base alla tua configurazione
         self.remove_from_pantry_page_url = reverse('remove_from_pantry_page', args=[self.product.id])
 
-    def test_remove_from_pantry_page_view(self):
-        response = self.client.post(self.remove_from_pantry_page_url)
+    def test_remove_from_pantry_view(self):
+        response = self.client.post(self.remove_from_pantry_url)
+        # Modifica: Assicurati che il redirect vada alla pagina desiderata
         self.assertRedirects(response, reverse('home'))
+        # Modifica: Verifica che il prodotto sia stato rimosso correttamente
         self.assertFalse(Product.objects.filter(name='Milk', user=self.user).exists())
+
 
 class RemoveFromPantryPageViewTests(TestCase):
     def setUp(self):
@@ -593,6 +605,7 @@ class EditShoppingListItemViewTests(TestCase):
         self.assertTrue(ShoppingList.objects.filter(product_name='Milk', user=self.user, quantity=3).exists())
 
 class UpdateProductViewTests(TestCase):
+
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpassword')
@@ -612,8 +625,13 @@ class UpdateProductViewTests(TestCase):
             'status': 'New',
             'notes': 'Test note'
         })
-        self.assertRedirects(response, reverse('pantry_product_detail'))
+        
+        # Modifica: passiamo l'ID del prodotto a reverse('pantry_product_detail')
+        self.assertRedirects(response, reverse('pantry_product_detail', args=[self.product.id]))
+        
+        # Verifica che il prodotto sia stato aggiornato correttamente
         self.assertTrue(Product.objects.filter(name='Milk', user=self.user, quantity=3).exists())
+
 
 class ScannerViewTests(TestCase):
     def setUp(self):
