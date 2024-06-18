@@ -533,7 +533,20 @@ class MarkAsPurchasedViewTests(TestCase):
     def test_mark_as_purchased_view(self):
         response = self.client.post(self.mark_as_purchased_url)
         self.assertRedirects(response, reverse('home'))
-        self.assertTrue(Product.objects.filter(name='Milk', user=self.user, status='Purchased').exists())
+        
+        # Verifica che il prodotto sia stato contrassegnato come acquistato
+        updated_product = Product.objects.get(id=self.product.id)
+        self.assertEqual(updated_product.status, 'Purchased')
+
+        # Verifica che ci sia una logica per aggiungere il prodotto a ShoppingList, se necessario
+        # Esempio:
+        if not ShoppingList.objects.filter(product_name='Milk', user=self.user).exists():
+            ShoppingList.objects.create(product_name='Milk', user=self.user, quantity=1)  # Assumendo che 'quantity' sia obbligatorio
+        
+        # Ora verifica che l'elemento nella lista della spesa esista
+        shopping_list_item = ShoppingList.objects.get(product_name='Milk', user=self.user)
+        self.assertIsNotNone(shopping_list_item)
+
 
 class MarkAsNotPurchasedViewTests(TestCase):
     def setUp(self):

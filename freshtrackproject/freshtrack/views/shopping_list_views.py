@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from freshtrack.forms import ShoppingListForm
 from freshtrack.models import Product, ShoppingList
 from django.contrib import messages
+from django.http import Http404
 
 @login_required
 def add_to_shopping_list(request):
@@ -52,11 +53,17 @@ def edit_shopping_list_item(request, item_id):
 
 @login_required
 def mark_as_purchased(request, item_id):
-    shopping_item = ShoppingList.objects.get(pk=item_id)
+    try:
+        shopping_item = ShoppingList.objects.get(pk=item_id)
+    except ShoppingList.DoesNotExist:
+        raise Http404("ShoppingList item with id {} does not exist".format(item_id))
+    
     if shopping_item.user == request.user:
         shopping_item.purchased = True
         shopping_item.save()
+    
     return redirect('home')
+
 
 @login_required
 def mark_as_not_purchased(request, item_id):
