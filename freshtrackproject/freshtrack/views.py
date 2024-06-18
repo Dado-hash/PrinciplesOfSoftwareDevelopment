@@ -49,20 +49,36 @@ def login_user(request):
 
 
 
+from django.contrib.auth.models import User
+
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
-        print(form.errors)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_staff = False
-            user.is_superuser = False
-            user.save()
-            return redirect("/login")
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+
+            # Check if the username has already been used
+            if User.objects.filter(username=username).exists():
+                form.add_error('username', 'This username is already taken. Please choose another one.')
+
+            # Check if the email has already been used
+            if User.objects.filter(email=email).exists():
+                form.add_error('email', 'This email has already been used.')
+
+            if form.errors:
+                print(form.errors)
+            else:
+                user = form.save(commit=False)
+                user.is_staff = False
+                user.is_superuser = False
+                user.save()
+                return redirect("/login")
     else:
         form = RegisterForm()
 
     return render(request, "register.html", {"form": form})
+
 
 def about(request):
     return render(request, 'about.html')
