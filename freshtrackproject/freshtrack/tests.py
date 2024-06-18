@@ -559,7 +559,7 @@ class MarkAsNotPurchasedViewTests(TestCase):
     def test_mark_as_not_purchased_view(self):
         response = self.client.post(self.mark_as_not_purchased_url)
         self.assertRedirects(response, reverse('home'))
-        self.assertTrue(ShoppingList.objects.filter(name='Milk', user=self.user).exists())
+        self.assertTrue(ShoppingList.objects.filter(product_name='Milk', user=self.user).exists())
 
 class MoveToShoppingListViewTests(TestCase):
     def setUp(self):
