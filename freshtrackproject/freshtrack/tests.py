@@ -51,7 +51,7 @@ class RegisterViewTests(TestCase):
             'email': 'newuser@example.com'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('register.html'))
+        self.assertRedirects(response, reverse('register'))
 
     def test_register_with_invalid_data(self):
         response = self.client.post(self.register_url, {
@@ -274,16 +274,18 @@ class RegisterFormTests(TestCase):
 
     def test_register_form_email_already_exists(self):
         User.objects.create_user(username='existinguser', email='existing@example.com', password='testpassword')
+        
+        # Passa direttamente i dati al form senza riutilizzare l'oggetto `form`
         form = RegisterForm(data={
             'username': 'newuser',
             'email': 'existing@example.com',
             'password1': 'newpassword123',
             'password2': 'newpassword123'
         })
-        form = RegisterForm(data=form)
-        
+    
         # Verifica che il form sia invalido
         self.assertFalse(form.is_valid())
+
 
 class ShoppingListFormTests(TestCase):
     def test_shopping_list_form_valid_data(self):
@@ -500,7 +502,7 @@ class RemoveFromPantryPageViewTests(TestCase):
         self.remove_from_pantry_page_url = reverse('remove_from_pantry_page', args=[self.product.id])
 
     def test_remove_from_pantry_view(self):
-        response = self.client.post(self.remove_from_pantry_url)
+        response = self.client.post(self.remove_from_pantry_page_url)
         # Modifica: Assicurati che il redirect vada alla pagina desiderata
         self.assertRedirects(response, reverse('home'))
         # Modifica: Verifica che il prodotto sia stato rimosso correttamente
@@ -557,7 +559,7 @@ class MoveToShoppingListViewTests(TestCase):
     def test_move_to_shopping_list_view(self):
         response = self.client.post(self.move_to_shopping_list_url)
         self.assertRedirects(response, reverse('home'))
-        self.assertTrue(ShoppingList.objects.filter(name='Milk', user=self.user).exists())
+        self.assertTrue(ShoppingList.objects.filter(product_name='Milk', user=self.user).exists())
 
 class PantryProductDetailViewTests(TestCase):
     def setUp(self):
