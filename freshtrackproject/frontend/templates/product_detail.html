@@ -71,7 +71,7 @@
         </div>
         <div class="mb-4">
             <label for="quantity" class="block text-sm mb-2 font-medium text-gray-700">Quantity</label>
-            <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantity" class="mb-2 p-2 border rounded-lg w-full">
+            <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantity" class="mb-2 p-2 border rounded-lg w-full" min="0">
             <select name="unit_of_measure" class="p-2 border rounded-lg w-full">
                 <option value="L" {% if item.unit_of_measure == 'L' %}selected{% endif %}>Litres</option>
                 <option value="g" {% if item.unit_of_measure == 'g' %}selected{% endif %}>Grams</option>

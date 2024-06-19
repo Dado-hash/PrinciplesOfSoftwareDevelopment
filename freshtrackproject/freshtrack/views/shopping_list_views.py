@@ -4,6 +4,7 @@ from freshtrack.forms import ShoppingListForm
 from freshtrack.models import Product, ShoppingList
 from django.contrib import messages
 from django.http import Http404
+from freshtrack.tasks import check_expirations
 
 @login_required
 def add_to_shopping_list(request):
@@ -47,6 +48,8 @@ def edit_shopping_list_item(request, item_id):
     else:
         # Se il metodo della richiesta non è POST, significa che è una richiesta GET e l'utente sta solo visualizzando il modulo
         form = ShoppingListForm(instance=item)
+
+    check_expirations()
     
     # Passa il modulo compilato o vuoto al template
     return render(request, 'shopping_list_item_detail.html', {'form': form})
@@ -63,7 +66,6 @@ def mark_as_purchased(request, item_id):
         shopping_item.save()
     
     return redirect('home')
-
 
 @login_required
 def mark_as_not_purchased(request, item_id):

@@ -1,6 +1,6 @@
+from typing import Any
 from django.db import models
 from django.contrib.auth.models import User
-
 
 class Product(models.Model):
     UNIT_CHOICES = [
@@ -13,6 +13,8 @@ class Product(models.Model):
         ('New', 'New'),
         ('Opened', 'Opened'),
     ]
+
+    id = models.AutoField(primary_key=True)  # Campo AutoField per l'ID univoco
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -28,6 +30,23 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_product_id(self):
+        return self.id
+
+    def save(self, *args, **kwargs):
+        # Check if the product already exists in the database
+        if self.pk:
+            # Get the current expiration date from the database
+            old_product = Product.objects.get(pk=self.pk)
+            old_expiration_date = old_product.expiration_date
+
+            # If the expiration date has changed, delete the old notifications
+            if old_expiration_date != self.expiration_date:
+                Notification.objects.filter(user=self.user, product=self, message__contains=old_expiration_date).delete()
+
+        super(Product, self).save(*args, **kwargs)
+
 
 
 class ShoppingList(models.Model):

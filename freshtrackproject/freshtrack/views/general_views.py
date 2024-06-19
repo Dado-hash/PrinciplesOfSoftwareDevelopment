@@ -12,6 +12,7 @@ def about(request):
 
 @login_required
 def notifications_view(request):
+    check_expirations()
     notifications = get_notifications_for_user(request.user)
     return render(request, 'notifications.html', {
         'notifications': notifications,
