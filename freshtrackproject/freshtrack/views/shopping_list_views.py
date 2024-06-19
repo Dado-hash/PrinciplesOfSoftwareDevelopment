@@ -42,6 +42,7 @@ def edit_shopping_list_item(request, item_id):
         if form.is_valid():
             # Salva i dati aggiornati dell'elemento della lista della spesa nel database
             form.save()
+            check_expirations()
             messages.success(request, 'Item updated successfully')
             # Reindirizza l'utente alla pagina di dettaglio dell'elemento della lista della spesa appena modificato
             return redirect('shopping_list_item_detail', item_id=item.id)

@@ -6,6 +6,8 @@ from freshtrack.models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib import messages
 
+from freshtrack.tasks import check_expirations
+
 @login_required
 def pantry(request):
     # Recupera l'utente attualmente autenticato
@@ -131,6 +133,7 @@ def update_product(request, item_id):
             
             # Salva i dati aggiornati del prodotto nel database
             form.save()
+            check_expirations()
             messages.success(request, 'Item updated successfully')
             # Reindirizza l'utente alla pagina di dettaglio del prodotto appena modificato
             return redirect('pantry_product_detail', item_id=item.id)
@@ -138,6 +141,7 @@ def update_product(request, item_id):
         # Se il metodo della richiesta non è POST, significa che è una richiesta GET e l'utente sta solo visualizzando il modulo
         form = EditProductForm(instance=item)
     
+    check_expirations()
     # Il form è invalido, passa il form compilato e gli errori al template
     return render(request, 'product_detail.html', {'form': form, 'item': item, 'errors': form.errors})
 
