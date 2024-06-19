@@ -5,7 +5,6 @@ from freshtrack.forms import EditProductForm
 from freshtrack.models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib import messages
-
 from freshtrack.tasks import check_expirations
 
 @login_required
@@ -25,11 +24,22 @@ def pantry(request):
     # Applica i filtri se sono presenti nei parametri GET
     category_filter = request.GET.get('category')
     storage_location_filter = request.GET.get('storage_location')
+    order_by = request.GET.get('order_by', 'name_asc')
 
     if category_filter:
         pantry_items = pantry_items.filter(category=category_filter)
     if storage_location_filter:
         pantry_items = pantry_items.filter(storage_location=storage_location_filter)
+
+    # Ordina i prodotti in base al criterio di ordinamento selezionato
+    if order_by == 'name_asc':
+        pantry_items = pantry_items.order_by('name')
+    elif order_by == 'name_desc':
+        pantry_items = pantry_items.order_by('-name')
+    elif order_by == 'expiration_date_asc':
+        pantry_items = pantry_items.order_by('expiration_date')
+    elif order_by == 'expiration_date_desc':
+        pantry_items = pantry_items.order_by('-expiration_date')
 
     # Passa i prodotti nella dispensa, le categorie e le posizioni di archiviazione filtrati come contesto al template
     return render(request, 'pantry.html', {
@@ -38,6 +48,7 @@ def pantry(request):
         'storage_locations': storage_locations,
         'selected_category': category_filter,  # Passa il valore selezionato per il filtro categoria
         'selected_storage_location': storage_location_filter,  # Passa il valore selezionato per il filtro di posizione di archiviazione
+        'order_by': order_by,  # Passa il criterio di ordinamento selezionato
     })
 
 @login_required

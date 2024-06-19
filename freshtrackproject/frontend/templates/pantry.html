@@ -35,6 +35,15 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="w-full md:w-1/3">
+                    <label for="order_by" class="block text-sm font-medium text-gray-700">Order By</label>
+                    <select name="order_by" id="order_by" class="p-2 border rounded-lg w-full">
+                        <option value="name_asc" {% if order_by == 'name_asc' %} selected {% endif %}>Name (A-Z)</option>
+                        <option value="name_desc" {% if order_by == 'name_desc' %} selected {% endif %}>Name (Z-A)</option>
+                        <option value="expiration_date_asc" {% if order_by == 'expiration_date_asc' %} selected {% endif %}>Expiration Date (Earliest)</option>
+                        <option value="expiration_date_desc" {% if order_by == 'expiration_date_desc' %} selected {% endif %}>Expiration Date (Latest)</option>
+                    </select>
+                </div>
                 <div class="w-full flex items-center justify-center md:w-1/3">
                     <button type="submit" class="bg-blue-400 text-white py-1 px-2 rounded-lg shadow-md hover:bg-blue-500 transition duration-300 block md:inline-block w-40 text-center flex justify-center items-center">Apply Filters</button>
                 </div>
