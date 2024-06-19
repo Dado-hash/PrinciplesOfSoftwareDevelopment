@@ -253,6 +253,10 @@ class AddProductBarcodeViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertFalse(Product.objects.filter(user=self.user).exists())
 
+from django.test import TestCase
+from django.contrib.auth.models import User
+from freshtrack.forms import RegisterForm
+
 class RegisterFormTests(TestCase):
     def test_register_form_valid_data(self):
         form = RegisterForm(data={
@@ -274,19 +278,30 @@ class RegisterFormTests(TestCase):
         self.assertIn('email', form.errors)
         self.assertIn('password2', form.errors)
 
+    def test_register_form_username_already_exists(self):
+        User.objects.create_user(username='existinguser', email='existing@example.com', password='testpassword')
+        
+        form = RegisterForm(data={
+            'username': 'existinguser',
+            'email': 'newuser@example.com',
+            'password1': 'newpassword123',
+            'password2': 'newpassword123'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
+
     def test_register_form_email_already_exists(self):
         User.objects.create_user(username='existinguser', email='existing@example.com', password='testpassword')
         
-        # Passa direttamente i dati al form senza riutilizzare l'oggetto `form`
         form = RegisterForm(data={
             'username': 'newuser',
             'email': 'existing@example.com',
             'password1': 'newpassword123',
             'password2': 'newpassword123'
         })
-    
-        # Verifica che il form sia invalido
         self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+
 
 
 class ShoppingListFormTests(TestCase):

@@ -1,16 +1,27 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
 from freshtrack.models import Profile, ShoppingList, Product
 
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField()
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
         fields = ["username", "email", "password1", "password2"]
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("This username is already taken. Please choose another one.")
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email has already been used.")
+        return email
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
@@ -18,7 +29,6 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
-
 
 class ShoppingListForm(forms.ModelForm):
     class Meta:
