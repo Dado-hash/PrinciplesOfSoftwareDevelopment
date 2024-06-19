@@ -7,8 +7,8 @@ from .models import Notification, Product, ShoppingList
 import json
 from unittest.mock import patch
 
-class LoginViewTests(TestCase):
-    
+class CustomLoginViewTests(TestCase):
+
     def setUp(self):
         self.client = Client()
         self.login_url = reverse('login')
@@ -19,25 +19,40 @@ class LoginViewTests(TestCase):
             'username': 'testuser',
             'password': 'testpassword'
         })
-        
         self.assertEqual(response.status_code, 302)
-        
-        # Debug per stampare l'URL di reindirizzamento
-        print(f"Redirect Location: {response['Location']}")
-        
         self.assertRedirects(response, reverse('home'))
 
-    def test_login_with_invalid_credentials(self):
+    def test_login_with_invalid_username(self):
+        response = self.client.post(self.login_url, {
+            'username': 'invaliduser',
+            'password': 'testpassword'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'The username does not exist.')
+
+    def test_login_with_invalid_password(self):
         response = self.client.post(self.login_url, {
             'username': 'testuser',
             'password': 'wrongpassword'
         })
-        
-        # Verifica che la risposta abbia uno status code 200 (poiché non è stato eseguito il reindirizzamento)
         self.assertEqual(response.status_code, 200)
-        
-        # Verifica che nella risposta sia presente il messaggio 'Invalid login credentials.'
-        self.assertContains(response, 'Invalid login credentials.')
+        self.assertContains(response, 'Incorrect password.')
+
+    def test_login_with_empty_username(self):
+        response = self.client.post(self.login_url, {
+            'username': '',
+            'password': 'testpassword'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'This field is required.')
+
+    def test_login_with_empty_password(self):
+        response = self.client.post(self.login_url, {
+            'username': 'testuser',
+            'password': ''
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'This field is required.')
 
 class RegisterViewTests(TestCase):
     def setUp(self):
@@ -201,7 +216,6 @@ class PantryViewTests(TestCase):
         self.assertContains(response, 'Milk')
         self.assertTemplateUsed(response, 'pantry.html')
 
-
 class NotificationsViewTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -213,7 +227,6 @@ class NotificationsViewTests(TestCase):
         response = self.client.get(self.notifications_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'notifications.html')
-
 
 class AddProductBarcodeViewTests(TestCase):
     def setUp(self):
@@ -445,7 +458,6 @@ class ShoppingListModelTests(TestCase):
         self.assertFalse(shopping_list_item.purchased)
         self.assertIsNotNone(shopping_list_item.added_date)
 
-
 class NotificationModelTests(TestCase):
 
     def setUp(self):
@@ -487,7 +499,7 @@ class LogoutViewTests(TestCase):
         # Crea un utente di prova e fai il login
         self.user = User.objects.create_user(username='testuser', password='password')
         self.client.login(username='testuser', password='password')
-        self.logout_url = reverse('logout')  # Assumi che 'logout' sia l'URL della vista di logout
+        self.logout_url = reverse('logout')
 
     def test_logout_view(self):
         # Fai una richiesta POST alla vista di logout
@@ -497,7 +509,7 @@ class LogoutViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         
         # Verifica che il redirect vada alla pagina di login
-        self.assertRedirects(response, reverse('login'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse('login') + '/', fetch_redirect_response=False)
 
     def tearDown(self):
         # Log out dell'utente dopo il test
@@ -518,7 +530,6 @@ class RemoveFromPantryPageViewTests(TestCase):
         self.assertRedirects(response, reverse('home'))
         # Modifica: Verifica che il prodotto sia stato rimosso correttamente
         self.assertFalse(Product.objects.filter(name='Milk', user=self.user).exists())
-
 
 class RemoveFromPantryPageViewTests(TestCase):
     def setUp(self):
@@ -694,5 +705,3 @@ class RemoveAndAddToPantryViewTests(TestCase):
         self.assertRedirects(response, reverse('home'))
         self.assertFalse(ShoppingList.objects.filter(id=self.shopping_item.id).exists())
         self.assertTrue(Product.objects.filter(name='Milk', user=self.user).exists())
-
-        

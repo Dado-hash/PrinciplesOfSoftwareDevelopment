@@ -14,15 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib.auth import views as auth_views
+# freshtrackproject/urls.py
 from django.contrib import admin
 from django.urls import path, include
 from freshtrack.views.general_views import index, about
-from freshtrack.views.authentication_views import login_user, register, logout
+from freshtrack.views.authentication_views import CustomLoginView, register
 from freshtrack.views.profile_views import profile, update_profile, home
 from freshtrack.views.pantry_views import (pantry, add_to_pantry, remove_from_pantry, pantry_product_detail,
                                            update_product, remove_from_pantry_page)
@@ -38,19 +34,18 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('', include("django.contrib.auth.urls")),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', include('django.contrib.auth.urls')),
     path('register/', register, name='register'),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
     path('about/', about, name='about'),
-    path('register/', register, name='register'),
     path('home/', home, name='home'),
-    path('logout/', logout, name='logout'),
-    path('add_to_pantry', add_to_pantry, name='add_to_pantry'),
+    path('add_to_pantry/', add_to_pantry, name='add_to_pantry'),  
     path('remove_from_pantry/<int:product_id>/', remove_from_pantry, name='remove_from_pantry'),
     path('remove_and_add_to_pantry/', remove_and_add_to_pantry, name='remove_and_add_to_pantry'),
     path('mark_as_purchased/<int:item_id>/', mark_as_purchased, name='mark_as_purchased'),
     path('mark_as_not_purchased/<int:item_id>/', mark_as_not_purchased, name='mark_as_not_purchased'),
     path('remove_from_shopping_list/<int:item_id>/', remove_from_shopping_list, name='remove_from_shopping_list'),
-    path('add_to_shopping_list', add_to_shopping_list, name='add_to_shopping_list'),
+    path('add_to_shopping_list/', add_to_shopping_list, name='add_to_shopping_list'), 
     path('remove_from_pantry_page/<int:product_id>/', remove_from_pantry_page, name='remove_from_pantry_page'),
     path('move_to_shopping_list/<int:item_id>/', move_to_shopping_list, name='move_to_shopping_list'),
     path('pantry/pantry_product_detail/<int:item_id>/', pantry_product_detail, name='pantry_product_detail'),
@@ -60,9 +55,9 @@ urlpatterns = [
     path('pantry/', pantry, name='pantry'),
     path('notifications/', notifications_view, name='notifications'),
     path('add_product_barcode/', add_product_barcode, name='add_product_barcode'),
-    path('scanner', scanner, name='scanner'),
-    path('upload', upload_receipt, name='upload'),
-    path('profile', profile, name='profile'),
+    path('scanner/', scanner, name='scanner'),  
+    path('upload/', upload_receipt, name='upload'),  
+    path('profile/', profile, name='profile'),
     path('update_profile/', update_profile, name='update_profile'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

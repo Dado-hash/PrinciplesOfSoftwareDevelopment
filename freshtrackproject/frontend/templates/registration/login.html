@@ -35,17 +35,21 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Login to Your Account</h2>
                 
                 <!-- Mostra i messaggi di errore se ci sono -->
-                {% if error_message %}
-                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg">
-                    {{ error_message }}
-                </div>
+                {% if messages %}
+                    <div class="mb-4">
+                        {% for message in messages %}
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-2">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% endif %}
                 
-                <form method="post">
+                <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
                     <div class="mb-4">
                         <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-lg">
+                        <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-lg" value="{{ form.username.value|default_if_none:'' }}">
                     </div>
                     <div class="mb-6">
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
@@ -56,7 +60,6 @@
             </div>
         </div>
     </section>
-
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-4 mt-auto">

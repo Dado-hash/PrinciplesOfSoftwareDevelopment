@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from freshtrack.models import Profile, ShoppingList, Product
-
+from django.contrib.auth.forms import AuthenticationForm
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -35,7 +35,6 @@ class ShoppingListForm(forms.ModelForm):
         model = ShoppingList
         fields = ['product_name', 'quantity', 'unit_of_measure', 'always_in_stock']
 
-
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -47,7 +46,6 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['expiration_date'].required = False  # Imposta il campo expiration_date come non obbligatorio
-
 
 class EditProductForm(forms.ModelForm):
     class Meta:
@@ -61,3 +59,41 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'profile_picture']
+
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(label='Username', max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
+    password = forms.CharField(label='Password', strip=False, widget=forms.PasswordInput)
+
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise forms.ValidationError(
+                'This account is inactive.',
+                code='inactive',
+            )
+        
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if not User.objects.filter(username=username).exists():
+            raise forms.ValidationError("The username does not exist.")
+        return username
+    
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        
+        if username and password:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                raise forms.ValidationError(
+                    'The username does not exist.',
+                    code='invalid_login',
+                )
+
+            if not user.check_password(password):
+                raise forms.ValidationError(
+                    'Incorrect password.',
+                    code='invalid_login',
+                )
+        
+        return self.cleaned_data
