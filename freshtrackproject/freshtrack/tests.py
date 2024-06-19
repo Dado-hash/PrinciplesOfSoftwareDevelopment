@@ -25,7 +25,7 @@ class LoginViewTests(TestCase):
         # Debug per stampare l'URL di reindirizzamento
         print(f"Redirect Location: {response['Location']}")
         
-        self.assertRedirects(response, reverse('home/'))
+        self.assertRedirects(response, reverse('home'))
 
     def test_login_with_invalid_credentials(self):
         response = self.client.post(self.login_url, {
@@ -424,7 +424,7 @@ class ProductModelTests(TestCase):
         self.assertEqual(product.category, 'Dairy')
         self.assertEqual(product.storage_location, 'Fridge')
         self.assertFalse(product.always_in_stock)
-        self.assertIsNotNone(product.insertion_date)
+        self.assertIsNotNone(product.expiration_date)
 
 class ShoppingListModelTests(TestCase):
 
@@ -497,7 +497,7 @@ class LogoutViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         
         # Verifica che il redirect vada alla pagina di login
-        self.assertRedirects(response, reverse('login'), fetch_redirect_response=False, normalize_url=True)
+        self.assertRedirects(response, reverse('login'), fetch_redirect_response=False)
 
     def tearDown(self):
         # Log out dell'utente dopo il test
@@ -650,7 +650,6 @@ class UpdateProductViewTests(TestCase):
         
         # Verifica che il prodotto sia stato aggiornato correttamente
         self.assertTrue(Product.objects.filter(name='Milk', user=self.user, quantity=3).exists())
-
 
 class ScannerViewTests(TestCase):
     def setUp(self):

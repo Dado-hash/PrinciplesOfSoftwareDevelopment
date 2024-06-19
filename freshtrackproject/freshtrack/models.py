@@ -2,52 +2,34 @@ from typing import Any
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db import models
+from django.contrib.auth.models import User
+from datetime import date
+
 class Product(models.Model):
-    UNIT_CHOICES = [
-        ('L', 'Litri'),
-        ('g', 'Grammi'),
-        ('u', 'Unità'),
-    ]
-
-    STATUS_CHOICES = [
-        ('New', 'New'),
-        ('Opened', 'Opened'),
-    ]
-
-    id = models.AutoField(primary_key=True)  # Campo AutoField per l'ID univoco
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
-    unit_of_measure = models.CharField(max_length=1, choices=UNIT_CHOICES)
-    expiration_date = models.DateField(blank=True, null=True, default=None) 
-    insertion_date = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=100, blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=100, choices=STATUS_CHOICES)
-    storage_location = models.CharField(max_length=100, blank=True, null=True)
+    unit_of_measure = models.CharField(max_length=10, null=True, blank=True)
+    expiration_date = models.DateField(null=True, blank=True)
     always_in_stock = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-    
-    def get_product_id(self):
-        return self.id
+    status = models.CharField(max_length=50, default="New")
+    category = models.CharField(max_length=100, null=True, blank=True)
+    storage_location = models.CharField(max_length=100, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # Check if the product already exists in the database
         if self.pk:
-            # Get the current expiration date from the database
             old_product = Product.objects.get(pk=self.pk)
             old_expiration_date = old_product.expiration_date
-
-            # If the expiration date has changed, delete the old notifications
-            if old_expiration_date != self.expiration_date:
-                Notification.objects.filter(user=self.user, product=self, message__contains=old_expiration_date).delete()
+            if old_expiration_date is not None:
+                Notification.objects.filter(
+                    user=self.user,
+                    product=self,
+                    message__contains=old_expiration_date
+                ).delete()
 
         super(Product, self).save(*args, **kwargs)
-
-
 
 class ShoppingList(models.Model):
     UNIT_CHOICES = [
