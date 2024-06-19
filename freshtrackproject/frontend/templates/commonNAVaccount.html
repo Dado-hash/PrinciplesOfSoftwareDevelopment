@@ -50,17 +50,12 @@
             position: absolute;
             top: -5px;
             right: -5px;
-            padding: 2px 6px;
+            padding: 1px 4px; /* Riduci padding per badge più piccolo */
             border-radius: 50%;
             background-color: red;
             color: white;
-            font-size: 0.75rem;
-            line-height: 1;
-            display: none;
-        }
-
-        .notifications-icon.has-notifications .badge {
-            display: inline-block;
+            font-size: 0.6rem; /* Riduci la dimensione del testo */
+            line-height: 1; /* Altezza della linea */
         }
 
         .dropdown-menu {
@@ -98,7 +93,7 @@
                             <i class="fas fa-bars"></i>
                         </button>
                     </div>
-                    <a href="/notifications" class="text-gray-600 hover:text-gray-800 ml-4 notifications-icon {% if notifications_count > 0 %}has-notifications{% endif %}">
+                    <a href="/notifications" class="text-gray-600 hover:text-gray-800 ml-4 notifications-icon">
                         <i class="fas fa-bell"></i>
                         {% if notifications_count > 0 %}
                             <span class="badge">{{ notifications_count }}</span>
