@@ -65,6 +65,10 @@ class ShoppingList(models.Model):
     always_in_stock = models.BooleanField(default=False)
     notes = models.TextField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        self.product_name = self.product_name.capitalize()
+        super(ShoppingList, self).save(*args, **kwargs)
+
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications')

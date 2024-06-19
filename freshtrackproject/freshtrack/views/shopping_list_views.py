@@ -11,12 +11,32 @@ def add_to_shopping_list(request):
     if request.method == 'POST':
         form = ShoppingListForm(request.POST)
         if form.is_valid():
-            shopping_item = form.save(commit=False)
-            shopping_item.user = request.user
-            shopping_item.save()
+            product_name = form.cleaned_data['product_name'].capitalize()
+            quantity = form.cleaned_data['quantity']
+            unit_of_measure = form.cleaned_data['unit_of_measure']
+
+            # Cerca un prodotto esistente con lo stesso nome e unità di misura
+            shopping_item = ShoppingList.objects.filter(
+                user=request.user,
+                product_name=product_name,
+                unit_of_measure=unit_of_measure
+            ).first()
+
+            if shopping_item:
+                # Se il prodotto esiste, aggiorna la quantità
+                shopping_item.quantity += quantity
+                shopping_item.save()
+            else:
+                # Crea un nuovo oggetto ShoppingList per l'utente corrente
+                shopping_item = form.save(commit=False)
+                shopping_item.user = request.user
+                shopping_item.product_name = product_name
+                shopping_item.save()
+
             return redirect('home')
     else:
         form = ShoppingListForm()
+
     return render(request, 'home.html', {'form': form})
 
 @login_required
