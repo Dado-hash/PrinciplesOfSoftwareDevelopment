@@ -570,7 +570,15 @@ class MoveToShoppingListViewTests(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client.login(username='testuser', password='testpassword')
-        self.product = Product.objects.create(user=self.user, name='Milk', quantity=2, status='Purchased')
+        self.product = Product.objects.create(
+            user=self.user,
+            name='Milk',
+            quantity=2,
+            unit_of_measure='L',
+            status='Purchased',
+            always_in_stock=False,
+            storage_location='Fridge'
+        )
         self.move_to_shopping_list_url = reverse('move_to_shopping_list', args=[self.product.id])
 
     def test_move_to_shopping_list_view(self):
