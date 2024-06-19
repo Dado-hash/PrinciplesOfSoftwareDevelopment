@@ -70,12 +70,6 @@ class CustomAuthenticationForm(AuthenticationForm):
                 'This account is inactive.',
                 code='inactive',
             )
-        
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if not User.objects.filter(username=username).exists():
-            raise forms.ValidationError("The username does not exist.")
-        return username
     
     def clean(self):
         username = self.cleaned_data.get('username')

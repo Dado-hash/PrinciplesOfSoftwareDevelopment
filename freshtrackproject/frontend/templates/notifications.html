@@ -1,4 +1,5 @@
 {% extends 'commonNAVaccount.html' %}
+{% load custom_filters %}
 
 {% block title %}Notifications{% endblock %}
 
@@ -14,7 +15,17 @@
                         <i class="fas fa-info-circle text-blue-500"></i>
                     </div>
                     <div>
-                        <p class="text-gray-800">{{ notification.message }}</p>
+                        <p class="text-gray-800">
+                            {% if notification.product %}
+                                {% with notification.message|split:notification.product.name as parts %}
+                                    {{ parts.0 }}
+                                    <a href="{% url 'pantry_product_detail' notification.product.id %}" class="text-blue-500 hover:underline">{{ notification.product.name }}</a>
+                                    {{ parts.1 }}
+                                {% endwith %}
+                            {% else %}
+                                {{ notification.message }}
+                            {% endif %}
+                        </p>
                         <p class="text-gray-500 text-sm">{{ notification.timestamp }}</p>
                     </div>
                 </div>
