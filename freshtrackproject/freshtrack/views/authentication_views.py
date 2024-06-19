@@ -2,37 +2,41 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.urls import reverse
 from freshtrack.forms import RegisterForm
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 
 def register(request):
-        if request.method == "POST":
-            form = RegisterForm(request.POST)
-            if form.is_valid():
-                username = form.cleaned_data['username']
-                email = form.cleaned_data['email']
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
 
-                # Check if the username has already been used
-                if User.objects.filter(username=username).exists():
-                    form.add_error('username', 'This username is already taken. Please choose another one.')
+            # Check if the username has already been used
+            if User.objects.filter(username=username).exists():
+                form.add_error('username', 'This username is already taken. Please choose another one.')
 
-                # Check if the email has already been used
-                if User.objects.filter(email=email).exists():
-                    form.add_error('email', 'This email has already been used.')
+            # Check if the email has already been used
+            if User.objects.filter(email=email).exists():
+                form.add_error('email', 'This email has already been used.')
 
-                if form.errors:
-                    print(form.errors)
-                else:
-                    user = form.save(commit=False)
-                    user.is_staff = False
-                    user.is_superuser = False
-                    user.save()
-                    return redirect("/login")
-        else:
-            form = RegisterForm()
-        
-        return render(request, "register.html", {"form": form})
+            if form.errors:
+                print(form.errors)
+            else:
+                user = form.save(commit=False)
+                user.is_staff = False
+                user.is_superuser = False
+                user.save()
+                return redirect(reverse('login'))  
+
+    else:
+        form = RegisterForm()
+
+    return render(request, "register.html", {"form": form})
 
 def login_user(request):
     if request.method == 'POST':

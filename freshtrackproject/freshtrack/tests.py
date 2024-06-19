@@ -42,6 +42,7 @@ class LoginViewTests(TestCase):
 class RegisterViewTests(TestCase):
     def setUp(self):
         self.register_url = reverse('register')
+        self.login_url = reverse('login')  # URL di login
 
     def test_register_with_valid_data(self):
         response = self.client.post(self.register_url, {
@@ -51,7 +52,8 @@ class RegisterViewTests(TestCase):
             'email': 'newuser@example.com'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('register'))
+        self.assertRedirects(response, self.login_url)  # Verifica il redirect alla pagina di login
+
 
     def test_register_with_invalid_data(self):
         response = self.client.post(self.register_url, {

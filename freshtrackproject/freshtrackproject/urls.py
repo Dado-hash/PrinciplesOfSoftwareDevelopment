@@ -38,6 +38,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('', include("django.contrib.auth.urls")),
+    path('register/', register, name='register'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
     path('about/', about, name='about'),
     path('register/', register, name='register'),
     path('home', home, name='home'),
