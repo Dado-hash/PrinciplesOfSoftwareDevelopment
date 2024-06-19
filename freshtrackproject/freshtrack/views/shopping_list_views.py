@@ -77,10 +77,7 @@ def edit_shopping_list_item(request, item_id):
 
 @login_required
 def mark_as_purchased(request, item_id):
-    try:
-        shopping_item = ShoppingList.objects.get(pk=item_id)
-    except ShoppingList.DoesNotExist:
-        raise Http404("ShoppingList item with id {} does not exist".format(item_id))
+    shopping_item = get_object_or_404(ShoppingList, pk=item_id)
     
     if shopping_item.user == request.user:
         shopping_item.purchased = True

@@ -10,52 +10,60 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
     <!-- Integra Font Awesome per icone -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <!-- Integra QuaggaJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <link rel="icon" href="{% static 'admin/img/icon.png' %}" type="image/png">
     <link rel="shortcut icon" href="{% static 'admin/img/icon.png' %}" type="image/png"> 
     <style>
+        /* Reset del margine e del padding del corpo */
         body {
             margin: 0;
             padding: 0;
+            min-height: 100vh; /* Imposta l'altezza minima del corpo per occupare l'intera altezza della finestra del browser */
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            flex-direction: column; /* Imposta il layout del corpo in colonna */
         }
 
+        /* Stile per il contenuto principale */
         .content {
-            flex-grow: 1;
+            flex: 1; /* Fai sì che il contenuto principale occupi tutto lo spazio rimanente */
             padding-bottom: 60px; /* Altezza del footer */
+            margin-bottom: auto; /* Sposta il margine inferiore al fondo della finestra del browser */
         }
 
+        /* Stile per il footer */
         footer {
             background-color: #333;
             color: white;
             padding: 20px;
             width: 100%;
-            position: relative;
+            position: sticky;
             bottom: 0;
         }
 
+        /* Stili personalizzati per la campanellina */
         .notifications-icon {
             position: relative;
             display: inline-block;
         }
 
         .notifications-icon .fa-bell {
-            font-size: 1.2rem;
+            font-size: 1.2rem; /* Dimensione della campanellina */
         }
 
         .notifications-icon .badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            padding: 1px 4px; /* Riduci padding per badge più piccolo */
+            padding: 1px 4px;
             border-radius: 50%;
             background-color: red;
             color: white;
-            font-size: 0.6rem; /* Riduci la dimensione del testo */
-            line-height: 1; /* Altezza della linea */
+            font-size: 0.75rem; /* Riduci la dimensione del testo */
+            line-height: 1; /* Imposta l'altezza della linea a 1 per evitare eccessivi spazi */
+            display: none; /* Nascondi il badge per impostazione predefinita */
+        }
+
+        .notifications-icon.has-notifications .badge {
+            display: inline-block; /* Mostra il badge solo se ci sono notifiche */
         }
 
         .dropdown-menu {
@@ -73,6 +81,31 @@
 
         .dropdown-menu.show {
             display: flex;
+        }
+
+        .developer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .developer-image {
+            width: 100%; /* Usa il 100% per far sì che l'immagine sia responsive */
+            max-width: 200px; /* Imposta una larghezza massima */
+            height: auto; /* Mantiene le proporzioni dell'immagine */
+            object-fit: cover; /* Mantiene le proporzioni delle immagini e le ritaglia per adattarle al contenitore */
+            border-radius: 50%; /* Rende l'immagine rotonda */
+            margin-bottom: 8px;
+        }
+
+        .developer-info {
+            text-align: center; /* Centra il testo */
+        }
+
+        @media (min-width: 640px) {
+            .developer-image {
+                max-width: 390px; /* Larghezza per schermi più grandi */
+            }
         }
     </style>
 </head>
@@ -101,7 +134,7 @@
                         </button>
                     </div>
                     {% if user.is_authenticated %}
-                        <a href="/notifications" class="text-gray-600 hover:text-gray-800 ml-4 notifications-icon">
+                        <a href="/notifications" class="text-gray-600 hover:text-gray-800 ml-4 notifications-icon {% if notifications_count > 0 %}has-notifications{% endif %}">
                             <i class="fas fa-bell"></i>
                             {% if notifications_count > 0 %}
                                 <span class="badge">{{ notifications_count }}</span>

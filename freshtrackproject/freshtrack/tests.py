@@ -253,10 +253,6 @@ class AddProductBarcodeViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertFalse(Product.objects.filter(user=self.user).exists())
 
-from django.test import TestCase
-from django.contrib.auth.models import User
-from freshtrack.forms import RegisterForm
-
 class RegisterFormTests(TestCase):
     def test_register_form_valid_data(self):
         form = RegisterForm(data={
@@ -301,8 +297,6 @@ class RegisterFormTests(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertIn('email', form.errors)
-
-
 
 class ShoppingListFormTests(TestCase):
     def test_shopping_list_form_valid_data(self):
@@ -544,39 +538,32 @@ class MarkAsPurchasedViewTests(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client.login(username='testuser', password='testpassword')
-        self.product = Product.objects.create(user=self.user, name='Milk', quantity=2)
-        self.mark_as_purchased_url = reverse('mark_as_purchased', args=[self.product.id])
+        self.shopping_item = ShoppingList.objects.create(user=self.user, product_name='Milk', quantity=2, unit_of_measure='u')
+        self.mark_as_purchased_url = reverse('mark_as_purchased', args=[self.shopping_item.id])
 
     def test_mark_as_purchased_view(self):
         response = self.client.post(self.mark_as_purchased_url)
         self.assertRedirects(response, reverse('home'))
         
-        # Verifica che il prodotto sia stato contrassegnato come acquistato
-        updated_product = Product.objects.get(id=self.product.id)
-        self.assertEqual(updated_product.status, 'Purchased')
-
-        # Verifica che ci sia una logica per aggiungere il prodotto a ShoppingList, se necessario
-        # Esempio:
-        if not ShoppingList.objects.filter(product_name='Milk', user=self.user).exists():
-            ShoppingList.objects.create(product_name='Milk', user=self.user, quantity=1)  # Assumendo che 'quantity' sia obbligatorio
-        
-        # Ora verifica che l'elemento nella lista della spesa esista
-        shopping_list_item = ShoppingList.objects.get(product_name='Milk', user=self.user)
-        self.assertIsNotNone(shopping_list_item)
-
+        # Verifica che l'elemento della lista della spesa sia stato contrassegnato come acquistato
+        updated_shopping_item = ShoppingList.objects.get(id=self.shopping_item.id)
+        self.assertTrue(updated_shopping_item.purchased)
 
 class MarkAsNotPurchasedViewTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client.login(username='testuser', password='testpassword')
-        self.product = Product.objects.create(user=self.user, name='Milk', quantity=2, status='Purchased')
-        self.mark_as_not_purchased_url = reverse('mark_as_not_purchased', args=[self.product.id])
+        self.shopping_item = ShoppingList.objects.create(user=self.user, product_name='Milk', quantity=2, unit_of_measure='u', purchased=True)
+        self.mark_as_not_purchased_url = reverse('mark_as_not_purchased', args=[self.shopping_item.id])
 
     def test_mark_as_not_purchased_view(self):
         response = self.client.post(self.mark_as_not_purchased_url)
         self.assertRedirects(response, reverse('home'))
-        self.assertTrue(ShoppingList.objects.filter(product_name='Milk', user=self.user).exists())
+        
+        # Verifica che l'elemento della lista della spesa sia stato contrassegnato come non acquistato
+        updated_shopping_item = ShoppingList.objects.get(id=self.shopping_item.id)
+        self.assertFalse(updated_shopping_item.purchased)
 
 class MoveToShoppingListViewTests(TestCase):
     def setUp(self):
