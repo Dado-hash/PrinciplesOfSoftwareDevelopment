@@ -6,6 +6,7 @@ from freshtrack.models import Product, ShoppingList
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib import messages
 from freshtrack.tasks import check_expirations
+from freshtrack.utility import PRODUCT_CATEGORY_MAP
 
 @login_required
 def pantry(request):
@@ -64,6 +65,9 @@ def add_to_pantry(request):
         always_in_stock = request.POST.get('always_in_stock')
         storage_location = request.POST.get('storage_location')
 
+        # Assegna la categoria in base al nome del prodotto
+        category = PRODUCT_CATEGORY_MAP.get(product_name.lower(), None)  # Usa la mappa, default None se non trovato
+
         # Cerca un prodotto esistente con lo stesso nome, unità di misura e data di scadenza
         product = Product.objects.filter(
             user=request.user,
@@ -87,7 +91,7 @@ def add_to_pantry(request):
                 unit_of_measure=unit_of_measure,
                 always_in_stock=always_in_stock,
                 status="New",
-                category='',
+                category=category,  # Usa la categoria determinata
                 storage_location=storage_location
             )
 
