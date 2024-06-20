@@ -1,6 +1,6 @@
 {% extends 'commonNAVaccount.html' %}
 
-{% block title %} {{ product.name }} {% endblock %}
+{% block title %} {{ item.name }} {% endblock %}
 
 {% block content %}
 
@@ -35,7 +35,7 @@
             </div>
             <div class="w-full sm:w-1/2 mt-4 sm:mt-0">
                 <label for="Food_Category" class="block text-sm font-medium text-gray-700">Food Category</label>
-                <input type="text" name="category" value="{% if item.category %}{{ item.category }}{% else %}{% endif %}" placeholder="Category" class="p-2 border rounded-lg w-full">
+                <input type="text" name="category" value="{{ item.category }}" placeholder="Category" class="p-2 border rounded-lg w-full" disabled>
             </div>
             {% if form.name.errors %}
             <div class="text-red-500 text-sm mt-1 w-full">
@@ -53,12 +53,12 @@
             <div class="w-full sm:w-1/2">
                 <label for="storage_location" class="block text-sm font-medium text-gray-700">Storage Location</label>
                 <select name="storage_location" class="p-2 border rounded-lg w-full">
-                    <option value="Pantry">Pantry</option>
-                    <option value="Fridge">Fridge</option>
-                    <option value="Freezer">Freezer</option>
-                    <option value="Spices">Spices</option>
-                    <option value="Beverages">Beverages</option>
-                    <option value="Other">Other</option>
+                    <option value="Pantry" {% if item.storage_location == 'Pantry' %}selected{% endif %}>Pantry</option>
+                    <option value="Fridge" {% if item.storage_location == 'Fridge' %}selected{% endif %}>Fridge</option>
+                    <option value="Freezer" {% if item.storage_location == 'Freezer' %}selected{% endif %}>Freezer</option>
+                    <option value="Spices" {% if item.storage_location == 'Spices' %}selected{% endif %}>Spices</option>
+                    <option value="Beverages" {% if item.storage_location == 'Beverages' %}selected{% endif %}>Beverages</option>
+                    <option value="Other" {% if item.storage_location == 'Other' %}selected{% endif %}>Other</option>
                 </select> 
             </div>
             <div class="w-full sm:w-1/2 mt-4 sm:mt-0">
