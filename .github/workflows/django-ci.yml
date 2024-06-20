@@ -37,6 +37,6 @@ jobs:
 
       - name: Run Django migrations and tests
         run: |
-          python manage.py migrate
-          python manage.py test
+          python freshtrackproject/manage.py migrate
+          python freshtrackproject/manage.py test
 
