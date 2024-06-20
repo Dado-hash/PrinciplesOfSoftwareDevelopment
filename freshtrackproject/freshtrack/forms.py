@@ -70,7 +70,7 @@ class CustomAuthenticationForm(AuthenticationForm):
                 'This account is inactive.',
                 code='inactive',
             )
-    
+
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
@@ -79,15 +79,11 @@ class CustomAuthenticationForm(AuthenticationForm):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                raise forms.ValidationError(
-                    'The username does not exist.',
-                    code='invalid_login',
-                )
+                self.add_error('username', 'The username does not exist.')
+                return self.cleaned_data
 
             if not user.check_password(password):
-                raise forms.ValidationError(
-                    'Incorrect password.',
-                    code='invalid_login',
-                )
+                self.add_error('password', 'Incorrect password.')
         
         return self.cleaned_data
+

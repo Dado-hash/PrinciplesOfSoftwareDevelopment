@@ -28,5 +28,7 @@ def register(request):
     return render(request, "register.html", {"form": form})
 
 class CustomLoginView(LoginView):
-    authentication_form = CustomAuthenticationForm
+    form_class = CustomAuthenticationForm
+    template_name = 'login.html'
+
 

@@ -35,11 +35,18 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Login to Your Account</h2>
                 
                 <!-- Mostra i messaggi di errore se ci sono -->
-                {% if messages %}
+                {% if form.errors %}
                     <div class="mb-4">
-                        {% for message in messages %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-2">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-2">
-                                {{ message }}
+                                {{ error }}
                             </div>
                         {% endfor %}
                     </div>
@@ -50,10 +57,24 @@
                     <div class="mb-4">
                         <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
                         <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-lg" value="{{ form.username.value|default_if_none:'' }}">
+                        {% if form.username.errors %}
+                            <p class="text-red-600 text-sm mt-2">
+                                {% for error in form.username.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </p>
+                        {% endif %}
                     </div>
                     <div class="mb-6">
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-lg">
+                        {% if form.password.errors %}
+                            <p class="text-red-600 text-sm mt-2">
+                                {% for error in form.password.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </p>
+                        {% endif %}
                     </div>
                     <button type="submit" class="w-full bg-red-400 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-500 transition duration-300">Login</button>
                 </form>

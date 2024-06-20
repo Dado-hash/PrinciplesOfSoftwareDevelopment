@@ -1,4 +1,3 @@
-
 from .models import Product, Notification
 import pytesseract
 from PIL import Image
